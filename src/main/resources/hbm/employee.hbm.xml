@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "https://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="models.Employee" table="employees">
+        <id name="id" column="id" type="java.util.UUID">
+            <generator class="org.hibernate.id.UUIDGenerator"/>
+        </id>
+        <property name="name" column="name" type="string"/>
+        <property name="email" column="email" type="string"/>
+        <property name="phone" column="phone" type="string"/>
+        <property name="post" column="post" type="string"/>
+        <many-to-one name="department" class="models.Department" column="department_id" not-null="true" cascade="save-update"/>
+    </class>
+</hibernate-mapping>
