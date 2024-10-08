@@ -46,14 +46,14 @@ public class EmployeeServiceImpl  implements EmployeeService {
     }
 
     @Override
-    public List<Employee> filter(String post, Department department) {
+    public List<Employee> filter(String post, String department) {
         List<Employee> employees = employeeDAO.getAll();
         if(post != null) {
             employees = employees.stream().filter(e -> e.getPost().contains(post)).toList();
         }
 
         if(department != null) {
-            employees = employees.stream().filter(e -> e.getDepartment().equals(department)).toList();
+            employees = employees.stream().filter(e -> e.getDepartment().getName().equals(department)).toList();
         }
         return employees;
     }
