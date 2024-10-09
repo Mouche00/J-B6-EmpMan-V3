@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class EmployeeServiceImpl extends GenericServiceImpl<Employee, String> implements EmployeeService {
-//    private final EmployeeDAO employeeDAO;
-//
-//    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
-//        super(employeeDAO);
-//        this.employeeDAO = employeeDAO;
-//    }
+    private final EmployeeDAO employeeDAO;
+
+    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
+        super(employeeDAO);
+        this.employeeDAO = employeeDAO;
+    }
 
     @Override
     public List<Employee> findAll(String searchTerm) {
