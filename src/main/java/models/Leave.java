@@ -12,7 +12,6 @@ public class Leave {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @Column(name = "start_date")
     private LocalDate startDate;
     private LocalDate endDate;
     private String reason;
