@@ -11,6 +11,7 @@ public class Department {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
+
 	private String name;
 
 	@OneToMany(mappedBy = "department")
