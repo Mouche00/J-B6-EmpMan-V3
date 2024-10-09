@@ -1,7 +1,6 @@
 package services.implementations;
 
-import DAOs.interfaces.EmployeeDAO;
-import models.Department;
+import daos.interfaces.EmployeeDAO;
 import models.Employee;
 import services.interfaces.EmployeeService;
 

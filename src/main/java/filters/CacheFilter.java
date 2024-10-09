@@ -1,6 +1,6 @@
 package filters;
 
-import DAOs.implementations.DepartmentDAOImpl;
+import daos.implementations.DepartmentDAOImpl;
 import models.Department;
 import services.implementations.DepartmentServiceImpl;
 import services.interfaces.FetchService;
