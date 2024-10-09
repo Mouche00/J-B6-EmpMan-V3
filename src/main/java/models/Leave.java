@@ -11,7 +11,7 @@ public class Leave {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
-    
+
     private LocalDate startDate;
     private LocalDate endDate;
     private String reason;
