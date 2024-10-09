@@ -17,6 +17,10 @@ public class Leave {
     private String reason;
     private LocalDate validatedAt;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public UUID getId() {
         return id;
     }

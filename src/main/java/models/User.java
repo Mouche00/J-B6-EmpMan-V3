@@ -2,6 +2,7 @@ package models;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -17,9 +18,13 @@ public class User {
     protected String name;
     protected String phone;
     protected String address;
+
+    @Column(unique = true)
     protected String email;
     protected String password;
     protected LocalDate DOB;
+
+    @Column(unique = true)
     protected String SSN;
     protected LocalDate hiringDate;
     protected double salary;
@@ -27,9 +32,8 @@ public class User {
     protected int leaveBalance;
     protected String post;
 
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    protected Department department;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected Set<Leave> leaves;
 
     public UUID getId() {
         return id;
@@ -133,13 +137,5 @@ public class User {
 
     public void setPost(String post) {
         this.post = post;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
     }
 }
