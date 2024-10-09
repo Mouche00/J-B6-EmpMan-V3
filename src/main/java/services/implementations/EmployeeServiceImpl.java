@@ -1,43 +1,21 @@
 package services.implementations;
 
 import daos.interfaces.EmployeeDAO;
+import daos.interfaces.GenericDAO;
 import models.Employee;
 import services.interfaces.EmployeeService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public class EmployeeServiceImpl  implements EmployeeService {
-    private final EmployeeDAO employeeDAO;
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
-    }
-
-    @Override
-    public void save(Employee employee) {
-        employeeDAO.save(employee);
-    }
-
-    @Override
-    public void update(Employee employee) {
-        employeeDAO.update(employee);
-    }
-
-    @Override
-    public void delete(String id) {
-        Optional<Employee> employee = find(id);
-        employee.ifPresent(employeeDAO::delete);
-    }
-
-    @Override
-    public Optional<Employee> find(String id) {
-        return employeeDAO.find(id);
-    }
-
-    @Override
-    public List<Employee> getAll() {
-        return employeeDAO.getAll();
-    }
+public class EmployeeServiceImpl extends GenericServiceImpl<Employee, String> implements EmployeeService {
+//    private final EmployeeDAO employeeDAO;
+//
+//    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
+//        super(employeeDAO);
+//        this.employeeDAO = employeeDAO;
+//    }
 
     @Override
     public List<Employee> findAll(String searchTerm) {

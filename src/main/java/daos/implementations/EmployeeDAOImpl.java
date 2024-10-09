@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EmployeeDAOImpl extends GenericDAOImpl<Employee> implements EmployeeDAO {
+public class EmployeeDAOImpl extends GenericDAOImpl<Employee, UUID> implements EmployeeDAO {
 
     private static final String JPQL_SEARCH_EMPLOYEES =
         "SELECT e " +

@@ -6,19 +6,9 @@ import services.interfaces.DepartmentService;
 
 import java.util.List;
 
-public class DepartmentServiceImpl implements DepartmentService {
-    private final DepartmentDAO departmentDAO;
+public class DepartmentServiceImpl extends GenericServiceImpl<Department, String> implements DepartmentService {
     public DepartmentServiceImpl(DepartmentDAO departmentDAO) {
-        this.departmentDAO = departmentDAO;
-    }
-
-    @Override
-    public List<Department> getAll() {
-        return departmentDAO.getAll();
-    }
-
-    @Override
-    public void save(Department department) {
-        departmentDAO.save(department);
+        super(departmentDAO);
+        this.genericDAO = departmentDAO;
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
+public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
     private static final Logger logger = LoggerFactory.getLogger(GenericDAOImpl.class);
     protected Class<T> entityClass;
@@ -42,7 +42,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         });
     }
 
-    public Optional<T> find(UUID id) {
+    public Optional<T> find(ID id) {
         return executeInTransaction(entityManager -> Optional.ofNullable(entityManager.find(entityClass, id)));
     }
 

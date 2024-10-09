@@ -3,8 +3,10 @@ package daos.implementations;
 import daos.interfaces.LeaveDAO;
 import models.Leave;
 
-public class LeaveDAOImpl extends GenericDAOImpl<Leave> implements LeaveDAO {
-    protected LeaveDAOImpl() {
+import java.util.UUID;
+
+public class LeaveDAOImpl extends GenericDAOImpl<Leave, UUID> implements LeaveDAO {
+    public LeaveDAOImpl() {
         super(Leave.class);
     }
 }
