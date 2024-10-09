@@ -53,6 +53,7 @@ public class EmployeeTest {
 
         // Fetch employee and verify
         Employee foundEmployee = em.find(Employee.class, employee.getId());
+
         assertNotNull(foundEmployee);
         assertEquals("John Doe", foundEmployee.getName());
         assertEquals(department, foundEmployee.getDepartment());

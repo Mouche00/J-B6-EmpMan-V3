@@ -1,11 +1,8 @@
 package services.implementations;
 
-import DAOs.interfaces.DepartmentDAO;
-import DAOs.interfaces.EmployeeDAO;
-import DAOs.interfaces.FetchDAO;
+import daos.interfaces.DepartmentDAO;
 import models.Department;
 import services.interfaces.DepartmentService;
-import services.interfaces.FetchService;
 
 import java.util.List;
 

@@ -1,12 +1,11 @@
-package DAOs.implementations;
+package daos.implementations;
 
-import DAOs.interfaces.EmployeeDAO;
-import models.Department;
+import daos.interfaces.EmployeeDAO;
 import models.Employee;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import utils.HibernateUtil;
+import utils.JPAUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public void save(Employee employee) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = JPAUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.save(employee);
             transaction.commit();
@@ -29,7 +28,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public void update(Employee employee) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = JPAUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.update(employee);
             transaction.commit();
@@ -42,7 +41,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public void delete(Employee employee) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = JPAUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.delete(employee);
             transaction.commit();
@@ -55,7 +54,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public Optional<Employee> find(String id) {
         Optional<Employee> employee = Optional.empty();
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = JPAUtil.getSessionFactory().openSession()) {
             employee = Optional.ofNullable(
                     session.get(Employee.class, UUID.fromString(id)));
         } catch (Exception e) {
@@ -67,13 +66,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public List<Employee> getAll() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = JPAUtil.getSessionFactory().openSession()) {
             return session.createQuery("select e from Employee e join fetch e.department", Employee.class).list();
         }
     }
 
     public List<Employee> findAll(String searchTerm) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = JPAUtil.getSessionFactory().openSession()) {
             searchTerm = "%" + searchTerm.toLowerCase() + "%";
 
             String hql = "select e " +
