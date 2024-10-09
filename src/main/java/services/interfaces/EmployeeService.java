@@ -13,5 +13,5 @@ public interface EmployeeService {
     Optional<Employee> find(String id);
     List<Employee> getAll();
     List<Employee> findAll(String searchTerm);
-    List<Employee> filter(String post, Department department);
+    List<Employee> filter(String post, String department);
 }
