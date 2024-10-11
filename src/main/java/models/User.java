@@ -9,10 +9,10 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "role")
 @Table(name = "users")
-public class User {
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "BINARY(16)")
+    @Column(columnDefinition = "UUID")
     protected UUID id;
 
     protected String name;
@@ -137,5 +137,31 @@ public class User {
 
     public void setPost(String post) {
         this.post = post;
+    }
+
+    public Set<Leave> getLeaves() {
+        return leaves;
+    }
+
+    public void setLeaves(Set<Leave> leaves) {
+        this.leaves = leaves;
+    }
+
+    public User(String name, String phone, String address, String email, String password, LocalDate DOB, String SSN, LocalDate hiringDate, double salary, int children, int leaveBalance, String post) {
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.DOB = DOB;
+        this.SSN = SSN;
+        this.hiringDate = hiringDate;
+        this.salary = salary;
+        this.children = children;
+        this.leaveBalance = leaveBalance;
+        this.post = post;
+    }
+
+    public User() {
     }
 }

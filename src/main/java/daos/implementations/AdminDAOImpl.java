@@ -1,12 +1,17 @@
 package daos.implementations;
 
 import daos.interfaces.AdminDAO;
-import daos.interfaces.LeaveDAO;
 import models.Admin;
-import models.Leave;
 
-public class AdminDAOImpl extends GenericDAOImpl<Admin> implements AdminDAO {
-    protected AdminDAOImpl() {
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
+import java.util.UUID;
+
+
+@RequestScoped
+@Named("adminDAOImpl")
+public class AdminDAOImpl extends GenericDAOImpl<Admin, UUID> implements AdminDAO {
+    public AdminDAOImpl() {
         super(Admin.class);
     }
 }

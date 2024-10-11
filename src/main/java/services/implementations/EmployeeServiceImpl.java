@@ -4,40 +4,16 @@ import daos.interfaces.EmployeeDAO;
 import models.Employee;
 import services.interfaces.EmployeeService;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.List;
-import java.util.Optional;
 
-public class EmployeeServiceImpl  implements EmployeeService {
-    private final EmployeeDAO employeeDAO;
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
-    }
-
-    @Override
-    public void save(Employee employee) {
-        employeeDAO.save(employee);
-    }
-
-    @Override
-    public void update(Employee employee) {
-        employeeDAO.update(employee);
-    }
-
-    @Override
-    public void delete(String id) {
-        Optional<Employee> employee = find(id);
-        employee.ifPresent(employeeDAO::delete);
-    }
-
-    @Override
-    public Optional<Employee> find(String id) {
-        return employeeDAO.find(id);
-    }
-
-    @Override
-    public List<Employee> getAll() {
-        return employeeDAO.getAll();
-    }
+@RequestScoped
+@Named("employeeServiceImpl")
+public class EmployeeServiceImpl extends GenericServiceImpl<Employee, String> implements EmployeeService {
+    @Inject
+    private EmployeeDAO employeeDAO;
 
     @Override
     public List<Employee> findAll(String searchTerm) {

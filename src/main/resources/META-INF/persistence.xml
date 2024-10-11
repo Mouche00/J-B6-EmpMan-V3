@@ -6,8 +6,11 @@
 
     <persistence-unit name="main-unit" transaction-type="RESOURCE_LOCAL">
         <!-- JPA entity classes -->
+        <class>models.User</class>
         <class>models.Employee</class>
+        <class>models.Department</class>
         <class>models.Admin</class>
+        <class>models.Leave</class>
 
         <properties>
             <!-- JDBC Connection settings -->

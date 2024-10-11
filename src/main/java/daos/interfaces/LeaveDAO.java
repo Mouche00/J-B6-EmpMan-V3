@@ -2,5 +2,8 @@ package daos.interfaces;
 
 import models.Leave;
 
-public interface LeaveDAO extends GenericDAO<Leave> {
+import java.util.UUID;
+
+
+public interface LeaveDAO extends GenericDAO<Leave, UUID> {
 }

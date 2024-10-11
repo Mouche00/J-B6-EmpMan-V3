@@ -10,9 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
+
+public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
     private static final Logger logger = LoggerFactory.getLogger(GenericDAOImpl.class);
     protected Class<T> entityClass;
@@ -21,18 +21,19 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         this.entityClass = entityClass;
     }
 
-    public boolean save(T entity) {
-        return executeInTransaction(entityManager -> {
-            entityManager.persist(entity);
-            return true;
-        });
-    }
-
-    public boolean update(T entity) {
+    public boolean merge(T entity) {
         return executeInTransaction(entityManager -> {
             entityManager.merge(entity);
             return true;
         });
+    }
+
+    public boolean save(T entity) {
+        return merge(entity);
+    }
+
+    public boolean update(T entity) {
+        return merge(entity);
     }
 
     public boolean delete(T entity) {
@@ -42,8 +43,8 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         });
     }
 
-    public Optional<T> find(UUID id) {
-        return executeInTransaction(entityManager -> Optional.ofNullable(entityManager.find(entityClass, id)));
+    public Optional<T> find(ID id) {
+        return execute(entityManager -> Optional.ofNullable(entityManager.find(entityClass, id)));
     }
 
     public List<T> getAll() {
@@ -52,7 +53,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     }
 
     protected <R> R executeInTransaction(EntityManagerFunction<R> function) {
-        EntityManager entityManager = JPAUtil.getEntityManager();
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
@@ -64,10 +65,22 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
+
             logger.error("Transaction failed", e);
             throw new DAOException(e);
         } finally {
             entityManager.close();
+        }
+    }
+
+    protected <R> R execute(EntityManagerFunction<R> function) {
+        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
+
+        try {
+            return function.apply(entityManager);
+        } catch (Exception e) {
+            logger.error("Operation failed", e);
+            throw new DAOException(e);
         }
     }
 

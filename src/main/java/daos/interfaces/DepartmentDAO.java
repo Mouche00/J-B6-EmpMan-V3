@@ -1,4 +1,8 @@
 package daos.interfaces;
 
-public interface DepartmentDAO {
+import models.Department;
+
+import java.util.UUID;
+
+public interface DepartmentDAO extends GenericDAO<Department, UUID> {
 }
