@@ -30,7 +30,6 @@ public abstract class User {
     protected double salary;
     protected int children;
     protected int leaveBalance;
-    protected String post;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected Set<Leave> leaves;
@@ -131,14 +130,6 @@ public abstract class User {
         this.leaveBalance = leaveBalance;
     }
 
-    public String getPost() {
-        return post;
-    }
-
-    public void setPost(String post) {
-        this.post = post;
-    }
-
     public Set<Leave> getLeaves() {
         return leaves;
     }
@@ -147,7 +138,7 @@ public abstract class User {
         this.leaves = leaves;
     }
 
-    public User(String name, String phone, String address, String email, String password, LocalDate DOB, String SSN, LocalDate hiringDate, double salary, int children, int leaveBalance, String post) {
+    public User(String name, String phone, String address, String email, String password, LocalDate DOB, String SSN, LocalDate hiringDate, double salary, int children, int leaveBalance) {
         this.name = name;
         this.phone = phone;
         this.address = address;
@@ -159,7 +150,6 @@ public abstract class User {
         this.salary = salary;
         this.children = children;
         this.leaveBalance = leaveBalance;
-        this.post = post;
     }
 
     public User() {
