@@ -27,6 +27,10 @@ public class JobOffer {
     @Enumerated(EnumType.STRING)
     private JobOfferStatus status = JobOfferStatus.OPEN;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "recruiter_id")
+    private Recruiter recruiter;
+
     @OneToMany(mappedBy = "jobOffer")
     private Set<Application> applications;
 
