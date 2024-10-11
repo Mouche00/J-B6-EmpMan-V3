@@ -5,5 +5,5 @@ import javax.persistence.*;
 @Entity
 @DiscriminatorValue("admin")
 @Table(name = "admins")
-public class Admin extends Employee{
+public class Admin extends User {
 }

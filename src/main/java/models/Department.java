@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Department {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)")
+	@Column(columnDefinition = "UUID")
 	private UUID id;
 
 	private String name;

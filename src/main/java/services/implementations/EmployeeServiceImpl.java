@@ -1,21 +1,19 @@
 package services.implementations;
 
 import daos.interfaces.EmployeeDAO;
-import daos.interfaces.GenericDAO;
 import models.Employee;
 import services.interfaces.EmployeeService;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
+@RequestScoped
+@Named("employeeServiceImpl")
 public class EmployeeServiceImpl extends GenericServiceImpl<Employee, String> implements EmployeeService {
-    private final EmployeeDAO employeeDAO;
-
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
-        super(employeeDAO);
-        this.employeeDAO = employeeDAO;
-    }
+    @Inject
+    private EmployeeDAO employeeDAO;
 
     @Override
     public List<Employee> findAll(String searchTerm) {

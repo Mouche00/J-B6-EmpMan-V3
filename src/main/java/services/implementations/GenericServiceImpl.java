@@ -3,16 +3,14 @@ package services.implementations;
 import daos.interfaces.GenericDAO;
 import services.interfaces.GenericService;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID> {
+    @Inject
     protected GenericDAO<T, UUID> genericDAO;
-
-    protected GenericServiceImpl(GenericDAO<T, UUID> genericDao) {
-        this.genericDAO = genericDao;
-    }
 
     @Override
     public boolean save(T entity) {
@@ -32,7 +30,7 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
 
     @Override
     public Optional<T> find(ID id) {
-        return genericDAO.find((UUID) id);
+        return genericDAO.find(UUID.fromString((String) id));
     }
 
     @Override

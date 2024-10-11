@@ -8,6 +8,7 @@
         <class>models.Employee</class>
         <class>models.Admin</class>
         <class>models.Department</class>
+        <class>models.Leave</class>
 
 
         <properties>

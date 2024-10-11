@@ -7,11 +7,15 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import utils.JPAUtil;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequestScoped
+@Named("employeeDAOImpl")
 public class EmployeeDAOImpl extends GenericDAOImpl<Employee, UUID> implements EmployeeDAO {
 
     private static final String JPQL_SEARCH_EMPLOYEES =
