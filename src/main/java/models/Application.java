@@ -6,7 +6,8 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "applications")
+@Table(name = "applications",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"applicant", "jobOffer"})})
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
