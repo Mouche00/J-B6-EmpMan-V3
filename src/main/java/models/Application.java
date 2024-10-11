@@ -22,6 +22,10 @@ public class Application {
     @JoinColumn(name = "applicant_id")
     private BaseUser applicant;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_offer_id")
+    private JobOffer jobOffer;
+
     public UUID getId() {
         return id;
     }

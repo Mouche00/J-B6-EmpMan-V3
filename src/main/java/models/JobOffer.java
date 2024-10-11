@@ -4,6 +4,7 @@ import models.enums.JobOfferStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -25,6 +26,9 @@ public class JobOffer {
 
     @Enumerated(EnumType.STRING)
     private JobOfferStatus status = JobOfferStatus.OPEN;
+
+    @OneToMany(mappedBy = "jobOffer")
+    private Set<Application> applications;
 
 
     public String getTitle() {
