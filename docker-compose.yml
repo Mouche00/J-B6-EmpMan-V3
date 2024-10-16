@@ -1,23 +1,6 @@
 version: '3.8'
 
 services:
-#  tomcat:
-#    image: tomcat:9.0
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - ./src/main/webapp:/usr/local/tomcat/webapps/ROOT
-#      - ./src/main/resources/hibernate.cfg.xml:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/hibernate.cfg.xml
-#      - ./target/classes:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes
-#    networks:
-#      - default-network
-#    environment:
-#      - DB_URL=${DB_URL}
-#      - DB_USER=${DB_USER}
-#      - DB_PASSWORD=${DB_PASSWORD}
-#    depends_on:
-#      - db
-
   db:
     image: postgres:latest
     ports:
