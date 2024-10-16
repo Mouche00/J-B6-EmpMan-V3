@@ -6,8 +6,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "applications",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"applicant", "jobOffer"})})
+@Table(name = "applications")
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -57,6 +56,14 @@ public class Application {
 
     public void setApplicant(BaseUser applicant) {
         this.applicant = applicant;
+    }
+
+    public JobOffer getJobOffer() {
+        return jobOffer;
+    }
+
+    public void setJobOffer(JobOffer jobOffer) {
+        this.jobOffer = jobOffer;
     }
 
     public Application(String CV) {

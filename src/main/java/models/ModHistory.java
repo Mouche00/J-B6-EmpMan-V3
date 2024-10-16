@@ -7,6 +7,7 @@ import java.util.UUID;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type")
+@DiscriminatorValue("mod_history")
 @Table(name = "mod_hsitory")
 public class ModHistory {
 
@@ -14,8 +15,7 @@ public class ModHistory {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "UUID")
     private UUID id;
-
-    @Lob
+    
     private String modifications;
 
     private LocalDate date;

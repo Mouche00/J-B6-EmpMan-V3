@@ -27,6 +27,14 @@ public class BaseUser {
     @OneToMany(mappedBy = "applicant")
     protected Set<Application> applications;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -65,6 +73,14 @@ public class BaseUser {
 
     public void setDOB(LocalDate DOB) {
         this.DOB = DOB;
+    }
+
+    public Set<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(Set<Application> applications) {
+        this.applications = applications;
     }
 
     public BaseUser(String name, String phone, String address, String email, LocalDate DOB) {

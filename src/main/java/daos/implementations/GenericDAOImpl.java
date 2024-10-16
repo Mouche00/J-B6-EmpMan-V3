@@ -80,8 +80,8 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
             return function.apply(entityManager);
         } catch (Exception e) {
             logger.error("Operation failed", e);
-            throw new DAOException(e);
         }
+        return null;
     }
 
     @FunctionalInterface

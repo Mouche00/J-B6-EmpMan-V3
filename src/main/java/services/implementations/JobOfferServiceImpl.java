@@ -13,7 +13,7 @@ public class JobOfferServiceImpl extends GenericServiceImpl<JobOffer, String> im
         List<JobOffer> jobOffers = genericDAO.getAll();
 
         jobOffers.stream()
-                .filter(jobOffer -> jobOffer.getDeadline().isAfter(LocalDate.now()) &&
+                .filter(jobOffer -> jobOffer.getDeadline().isBefore(LocalDate.now()) &&
                         jobOffer.getStatus().equals(JobOfferStatus.OPEN))
                 .forEach(jobOffer -> {
                     jobOffer.setStatus(JobOfferStatus.EXPIRED);

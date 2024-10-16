@@ -1,39 +1,34 @@
-//package controllers;
-//
-//import daos.implementations.EmployeeDAOImpl;
-//import models.Department;
-//import models.Employee;
-//import services.implementations.EmployeeServiceImpl;
-//import services.interfaces.EmployeeService;
-//
-//import javax.servlet.ServletContext;
-//import javax.servlet.ServletException;
-//import javax.servlet.annotation.WebServlet;
-//import javax.servlet.http.HttpServlet;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//import javax.servlet.http.HttpSession;
-//import javax.validation.Validation;
-//import javax.validation.Validator;
-//import java.io.IOException;
-//import java.time.LocalTime;
-//import java.time.format.DateTimeFormatter;
-//import java.util.*;
-//import java.util.function.Consumer;
-//
-//@WebServlet
-//public class EmployeeController extends HttpServlet {
-//    private EmployeeService employeeService;
-//    private Validator validator;
-//
-//    @Override
-//    public void init() {
-//        employeeService = new EmployeeServiceImpl(
-//                new EmployeeDAOImpl());
-//        validator = Validation.buildDefaultValidatorFactory().getValidator();
-//    }
-//
-//
+package controllers;
+
+import daos.implementations.EmployeeDAOImpl;
+import models.Department;
+import models.Employee;
+import services.implementations.EmployeeServiceImpl;
+import services.interfaces.EmployeeService;
+
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.function.Consumer;
+
+@WebServlet("/employee")
+public class EmployeeController extends HttpServlet {
+    @Inject
+    private EmployeeService employeeService;
+    private final String path = "/WEB-INF/views/";
+
+
 //    protected void doPost(HttpServletRequest request, HttpServletResponse response)
 //            throws ServletException, IOException {
 //        String fullUri = request.getRequestURI();
@@ -56,38 +51,38 @@
 //                throw new ServletException("Resource not found.");
 //        }
 //    }
-//
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//
-//        String fullUri = request.getRequestURI();
-//        String contextPath = request.getContextPath();
-//        String servletPath = request.getServletPath();
-//
-//        String uriAfterServletUrl = fullUri.substring(contextPath.length() + servletPath.length());
-//
-//        switch (uriAfterServletUrl) {
-//            case "/create":
-//                create(request, response);
-//                break;
-//            case "/edit":
-//                edit(request, response);
-//                break;
-//            default:
-//                list(request, response);
-//        }
-//    }
-//
-//    private boolean setParameter(HttpServletRequest request, String parameter, Consumer<String> setter) {
-//        String value = request.getParameter(parameter);
-//        boolean canBeSet = value != null;
-//        if (canBeSet) {
-//            setter.accept(value);
-//        }
-//        return canBeSet;
-//    }
-//
-//
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String fullUri = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String servletPath = request.getServletPath();
+
+        String uriAfterServletUrl = fullUri.substring(contextPath.length() + servletPath.length());
+
+        switch (uriAfterServletUrl) {
+            case "/create":
+                create(request, response);
+                break;
+            case "/edit":
+                edit(request, response);
+                break;
+            default:
+                list(request, response);
+        }
+    }
+
+    private boolean setParameter(HttpServletRequest request, String parameter, Consumer<String> setter) {
+        String value = request.getParameter(parameter);
+        boolean canBeSet = value != null;
+        if (canBeSet) {
+            setter.accept(value);
+        }
+        return canBeSet;
+    }
+
+
 //    private void update(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //        HttpSession session = request.getSession();
 //        Employee employee = (Employee) session.getAttribute("employee");
@@ -103,20 +98,20 @@
 //        response.sendRedirect("/employees");
 //    }
 //
-//    private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        String id = request.getParameter("id");
-//        Optional<Employee> employee = employeeService.find(id);
-//        employee.ifPresent(e -> {
-//            request.setAttribute("employee", e);
-//            HttpSession session = request.getSession();
-//            session.setAttribute("employee", e);
-//            session.setMaxInactiveInterval(10*60);
-//        });
-//        HttpSession session = request.getSession();
-//        List<Employee> employees = (List<Employee>) session.getAttribute("employees");
-//        request.setAttribute("employees", employees);
-//        request.getRequestDispatcher("/views/index.jsp").forward(request, response);
-//    }
+    private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter("id");
+        Optional<Employee> employee = employeeService.find(id);
+        employee.ifPresent(e -> {
+            request.setAttribute("employee", e);
+            HttpSession session = request.getSession();
+            session.setAttribute("employee", e);
+            session.setMaxInactiveInterval(10*60);
+        });
+        HttpSession session = request.getSession();
+        List<Employee> employees = (List<Employee>) session.getAttribute("employees");
+        request.setAttribute("employees", employees);
+        request.getRequestDispatcher("/views/index.jsp").forward(request, response);
+    }
 //
 //    private void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //        String id = request.getParameter("id");
@@ -124,16 +119,16 @@
 //        addMessage(request,  "Employee deleted successfully!");
 //        response.sendRedirect("/employees");
 //    }
-//
-//    private Map<UUID, Department> getDepartments() {
-//        ServletContext context = getServletContext();
-//        return (Map<UUID, Department>) context.getAttribute("departments");
-//    }
-//
-//    private Department getDepartment(String id) {
-//        return (Department) getDepartments().get(UUID.fromString(id));
-//    }
-//
+
+    private Map<UUID, Department> getDepartments() {
+        ServletContext context = getServletContext();
+        return (Map<UUID, Department>) context.getAttribute("departments");
+    }
+
+    private Department getDepartment(String id) {
+        return (Department) getDepartments().get(UUID.fromString(id));
+    }
+
 //    private void save(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        String name = request.getParameter("name");
 //        String email = request.getParameter("email");
@@ -187,30 +182,30 @@
 //
 //        session.setAttribute("messages", messages);
 //    }
-//
-//    private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("departments", getDepartments());
+//        request.getRequestDispatcher("/views/form.jsp").forward(request, response);
+    }
+
+    protected void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String searchTerm = request.getParameter("s");
+        String filter = request.getParameter("dep");
+        List<Employee> employees = new ArrayList<>();
+        if (!(searchTerm == null || searchTerm.isEmpty())) {
+            employees = employeeService.findAll(searchTerm);
+        } else if(!(filter == null || filter.isEmpty())) {
+            employees = employeeService.filter(null, filter);
+        } else {
+            employees = employeeService.getAll();
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute("employees", employees);
+        session.setAttribute("employee", null);
+
+        request.setAttribute("employees", employees);
 //        request.setAttribute("departments", getDepartments());
-////        request.getRequestDispatcher("/views/form.jsp").forward(request, response);
-//    }
-//
-//    protected void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        String searchTerm = request.getParameter("s");
-//        String filter = request.getParameter("dep");
-//        List<Employee> employees = new ArrayList<>();
-//        if (!(searchTerm == null || searchTerm.isEmpty())) {
-//            employees = employeeService.findAll(searchTerm);
-//        } else if(!(filter == null || filter.isEmpty())) {
-//            employees = employeeService.filter(null, filter);
-//        } else {
-//            employees = employeeService.getAll();
-//        }
-//
-//        HttpSession session = request.getSession();
-//        session.setAttribute("employees", employees);
-//        session.setAttribute("employee", null);
-//
-//        request.setAttribute("employees", employees);
-//        request.setAttribute("departments", getDepartments());
-//        request.getRequestDispatcher("/views/index.jsp").forward(request, response);
-//    }
-//}
+        request.getRequestDispatcher(path + "employee.jsp").forward(request, response);
+    }
+}
