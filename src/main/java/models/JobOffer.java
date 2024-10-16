@@ -34,6 +34,13 @@ public class JobOffer {
     @OneToMany(mappedBy = "jobOffer")
     private Set<Application> applications;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -83,12 +90,29 @@ public class JobOffer {
         this.status = status;
     }
 
-    public JobOffer(String title, String description, LocalDate publishDate, LocalDate deadline, String criteria) {
+    public Recruiter getRecruiter() {
+        return recruiter;
+    }
+
+    public void setRecruiter(Recruiter recruiter) {
+        this.recruiter = recruiter;
+    }
+
+    public Set<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(Set<Application> applications) {
+        this.applications = applications;
+    }
+
+    public JobOffer(String title, String description, LocalDate publishDate, LocalDate deadline, String criteria, Recruiter recruiter) {
         this.title = title;
         this.description = description;
         this.publishDate = publishDate;
         this.deadline = deadline;
         this.criteria = criteria;
+        this.recruiter = recruiter;
     }
 
     public JobOffer() {

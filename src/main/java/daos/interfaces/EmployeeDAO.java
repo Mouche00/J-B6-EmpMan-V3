@@ -3,7 +3,6 @@ package daos.interfaces;
 import models.Employee;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface EmployeeDAO extends GenericDAO<Employee, UUID> {

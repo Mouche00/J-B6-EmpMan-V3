@@ -71,6 +71,7 @@ a {
 .main {
     position: relative;
     width: 100%;
+    min-height: 100vh;
 }
 
 .main-list {
@@ -87,6 +88,13 @@ a {
     box-shadow:
         10px 10px 20px rgba(201, 206, 213, 0.6), /* Softer and larger shadow */
         -10px -10px 20px rgba(255, 255, 255, 0.9); /* Light highlight */
+
+    min-height: 100vh;
+}
+
+.main-side {
+    z-index: 1;
+    position: absolute;
 }
 
 .main-form {
@@ -152,10 +160,6 @@ h4 {
 .statistics-text h5 {
     font-weight: lighter;
     font-style: italic;
-}
-
-.employees-container {
-    margin-top: 3rem;
 }
 
 .search-container {
@@ -319,7 +323,7 @@ p {
     border-top: 1px #0077b6 dotted;
 }
 
-.info-line .label {
+.label {
     display: flex;
     justify-content: center;
     gap: 5px;
@@ -329,7 +333,7 @@ p {
     color: #0077b6;
 }
 
-.info-line svg {
+.label svg {
     width: 15px;
     fill: #0077b6;
 }
@@ -411,6 +415,10 @@ p {
     align-items: center;
     height: 100vh;
     width: 50%;
+}
+
+.wide-form {
+    width: 100%;
 }
 
 .main-form h1 {

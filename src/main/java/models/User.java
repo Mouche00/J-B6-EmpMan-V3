@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Set;
@@ -8,7 +10,7 @@ import java.util.UUID;
 @Entity
 @DiscriminatorValue("user")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "role")
+@DiscriminatorColumn(name = "user_type")
 @Table(name = "users")
 public abstract class User extends BaseUser {
 
@@ -17,13 +19,18 @@ public abstract class User extends BaseUser {
     @Column(unique = true)
     protected String SSN;
 
+    protected String role;
     protected LocalDate hiringDate;
     protected double salary;
     protected int children;
     protected int leaveBalance;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     protected Set<Leave> leaves;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected Set<Leave> modifications;
 
     public UUID getId() {
         return id;
@@ -47,6 +54,10 @@ public abstract class User extends BaseUser {
 
     public void setSSN(String SSN) {
         this.SSN = SSN;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public LocalDate getHiringDate() {
@@ -89,10 +100,19 @@ public abstract class User extends BaseUser {
         this.leaves = leaves;
     }
 
-    public User(String name, String phone, String address, String email, LocalDate DOB, String password, String SSN, LocalDate hiringDate, double salary, int children, int leaveBalance) {
+    public Set<Leave> getModifications() {
+        return modifications;
+    }
+
+    public void setModifications(Set<Leave> modifications) {
+        this.modifications = modifications;
+    }
+
+    public User(String name, String phone, String address, String email, String password, LocalDate DOB, String SSN, String role, LocalDate hiringDate, double salary, int children, int leaveBalance) {
         super(name, phone, address, email, DOB);
         this.password = password;
         this.SSN = SSN;
+        this.role = role;
         this.hiringDate = hiringDate;
         this.salary = salary;
         this.children = children;

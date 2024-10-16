@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -17,8 +19,9 @@ public class Leave {
     private String reason;
     private LocalDate validatedAt;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     public UUID getId() {
@@ -69,11 +72,10 @@ public class Leave {
         this.user = user;
     }
 
-    public Leave(LocalDate startDate, LocalDate endDate, String reason, LocalDate validatedAt, User user) {
+    public Leave(LocalDate startDate, LocalDate endDate, String reason, User user) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reason = reason;
-        this.validatedAt = validatedAt;
         this.user = user;
     }
 

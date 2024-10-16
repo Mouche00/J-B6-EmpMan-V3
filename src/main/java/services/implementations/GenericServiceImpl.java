@@ -3,6 +3,7 @@ package services.implementations;
 import daos.interfaces.GenericDAO;
 import services.interfaces.GenericService;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;

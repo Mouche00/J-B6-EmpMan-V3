@@ -14,7 +14,6 @@ public class JPAUtil {
 
     private JPAUtil() {}
 
-    // Inner static Holder class for lazy initialization
     private static class EntityManagerFactoryHolder {
         private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = buildEntityManagerFactory();
     }
@@ -28,7 +27,6 @@ public class JPAUtil {
         }
     }
 
-    // Thread-safe access to the EntityManagerFactory
     public static EntityManagerFactory getEntityManagerFactory() {
         return EntityManagerFactoryHolder.ENTITY_MANAGER_FACTORY;
     }

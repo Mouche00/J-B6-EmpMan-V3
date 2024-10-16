@@ -10,7 +10,7 @@ public class Employee extends User {
 
     protected String post;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     private Department department;
 
@@ -31,7 +31,7 @@ public class Employee extends User {
     }
 
     public Employee(String name, String phone, String address, String email, String password, LocalDate DOB, String SSN, LocalDate hiringDate, double salary, int children, int leaveBalance, String post, Department department) {
-        super(name, phone, address, email, password, DOB, SSN, hiringDate, salary, children, leaveBalance);
+        super(name, phone, address, email, password, DOB, SSN, "employee", hiringDate, salary, children, leaveBalance);
         this.post = post;
         this.department = department;
     }

@@ -18,23 +18,19 @@ public class JobOfferDeadlineListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        // Access the SchedulerHolder to initialize the scheduler lazily and safely
         SchedulerHolder.getScheduler().scheduleAtFixedRate(() -> {
             jobOfferService.checkDeadlines();
-        }, 0, 1, TimeUnit.HOURS);  // Initial delay = 0 (run immediately), repeat every 1 hour
+        }, 0, 1, TimeUnit.HOURS);
 
         System.out.println("JobOfferExpiryScheduler initialized.");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        // Shut down the scheduler when the server stops
         SchedulerHolder.shutdownScheduler();
     }
 
-    // Inner static class responsible for holding the scheduler
     private static class SchedulerHolder {
-        // The scheduler is initialized lazily and safely by the JVM
         private static final ScheduledExecutorService SCHEDULER = Executors.newSingleThreadScheduledExecutor();
 
         public static ScheduledExecutorService getScheduler() {
