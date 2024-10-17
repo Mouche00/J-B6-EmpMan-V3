@@ -110,17 +110,19 @@ public class UserServiceImpl extends GenericServiceImpl<User, String> implements
     }
 
     private double calculateFinalSalary(double salary, int children) {
+        final int numChildren = Math.min(children, 6);
+        final int firstThreeChildren = Math.min(numChildren, 3);
+        final int additionalChildren = Math.max(0, numChildren - 3);
 
-        double finalSalary = salary;
-        for (int i = 1; i <= children; i++) {
-            if(i > 6) break;
-            if (salary <= 6000) {
-                finalSalary += (i <= 3) ? 300 : 150;
-            } else if (salary >= 8000) {
-                finalSalary += (i <= 3) ? 200 : 110;
-            }
+        double bonus = 0;
+
+        if (salary <= 6000) {
+            bonus = firstThreeChildren * 300 + additionalChildren * 150;
+        } else if (salary >= 8000) {
+            bonus = firstThreeChildren * 200 + additionalChildren * 110;
         }
-        return finalSalary;
+
+        return salary + bonus;
     }
 
     public void handleLeaveEvent(@Observes LeaveEvent leaveEvent) {

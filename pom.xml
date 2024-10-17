@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>J-B4-UseMan</groupId>
-  <artifactId>J-B4-UseMan</artifactId>
+  <groupId>J-B6-EmpMan-V3</groupId>
+  <artifactId>J-B6-EmpMan-V3</artifactId>
   <version>1.0.0-FINAL</version>
   <packaging>war</packaging>
 
@@ -15,6 +15,28 @@
   </properties>
 
   <dependencies>
+    <!-- JUnit 5 (Jupiter) -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Mockito Core -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.12.4</version>
+      <scope>test</scope>
+    </dependency>
+
     <!-- Java EE API for JPA, Servlets, JSP, etc. -->
     <dependency>
       <groupId>javax</groupId>
@@ -67,21 +89,14 @@
       <version>1.2.5</version>
     </dependency>
 
-    <!-- JUnit -->
+    <!-- Mockito JUnit 5 Integration -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>3.12.4</version>
       <scope>test</scope>
     </dependency>
 
-    <!-- Instancio -->
-    <dependency>
-      <groupId>org.instancio</groupId>
-      <artifactId>instancio-core</artifactId>
-      <version>2.6.0</version>
-      <scope>test</scope>
-    </dependency>
 
     <!-- H2 Database (In-Memory) -->
     <dependency>
@@ -132,6 +147,27 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.3</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.5</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <!-- attached to Maven test phase -->
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
