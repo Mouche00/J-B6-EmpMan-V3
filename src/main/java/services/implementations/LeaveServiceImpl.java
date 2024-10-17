@@ -24,32 +24,42 @@ public class LeaveServiceImpl extends GenericServiceImpl<Leave, String> implemen
 
     @Override
     public boolean save(Leave leave) {
-        long days = ChronoUnit.DAYS.between(leave.getStartDate(), leave.getEndDate());
-        User user = leave.getUser();
-
-        if(days <= user.getLeaveBalance()) {
+        if (isLeaveWithinBalance(leave)) {
             return genericDAO.save(leave);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean validate(String id) {
+        Optional<Leave> leaveOptional = find(id);
+
+        if (leaveOptional.isEmpty()) {
+            return false;
+        }
+
+        Leave leave = leaveOptional.get();
+        if (!isLeaveWithinBalance(leave)) {
+            return false;
+        }
+
+        leave.setValidatedAt(LocalDate.now());
+
+        if (genericDAO.update(leave)) {
+            leaveEvent.fire(new LeaveEvent(calculateLeaveDays(leave), leave.getUser()));
+            return true;
         }
 
         return false;
     }
 
-    public boolean validate(String id) {
-        Optional<Leave> leave = find(id);
+    private long calculateLeaveDays(Leave leave) {
+        return ChronoUnit.DAYS.between(leave.getStartDate(), leave.getEndDate());
+    }
 
-        if(leave.isPresent()) {
-            long days = ChronoUnit.DAYS.between(leave.get().getStartDate(), leave.get().getEndDate());
-            User user = leave.get().getUser();
-
-            if(days <= user.getLeaveBalance()) {
-                leave.get().setValidatedAt(LocalDate.now());
-                if(genericDAO.update(leave.get())) {
-                    leaveEvent.fire(new LeaveEvent(days, user));
-                    return true;
-                }
-            }
-        }
-
-        return false;
+    private boolean isLeaveWithinBalance(Leave leave) {
+        long days = calculateLeaveDays(leave);
+        User user = leave.getUser();
+        return days <= user.getLeaveBalance();
     }
 }
