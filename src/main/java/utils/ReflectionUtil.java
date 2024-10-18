@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class ReflectionUtil {
 
-    public static List<Field> getAllDeclaredFields(Class<?> clazz) {
+    public List<Field> getAllDeclaredFields(Class<?> clazz) {
         List<Field> fields = new ArrayList<>();
         while (clazz != null) {
             for (Field field : clazz.getDeclaredFields()) {
@@ -21,10 +21,10 @@ public class ReflectionUtil {
         return fields;
     }
 
-    public static Map<String, Object> trackModifiedAttributes(Object existingObject, Object updatedObject) {
+    public Map<String, Object> trackModifiedAttributes(Object existingObject, Object updatedObject) {
         Map<String, Object> modifiedAttributes = new HashMap<>();
 
-        List<Field> fields = ReflectionUtil.getAllDeclaredFields(User.class);
+        List<Field> fields = getAllDeclaredFields(User.class);
         for (Field field : fields) {
             field.setAccessible(true);
             try {
