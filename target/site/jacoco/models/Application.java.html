@@ -15,7 +15,7 @@ public class Application {
 
     private String CV;
 
-<span class="nc" id="L18">    @Enumerated(EnumType.STRING)</span>
+<span class="pc" id="L18">    @Enumerated(EnumType.STRING)</span>
     private ApplicationStatus status = ApplicationStatus.RECEIVED;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -51,26 +51,26 @@ public class Application {
 <span class="nc" id="L51">    }</span>
 
     public BaseUser getApplicant() {
-<span class="nc" id="L54">        return applicant;</span>
+<span class="fc" id="L54">        return applicant;</span>
     }
 
     public void setApplicant(BaseUser applicant) {
-<span class="nc" id="L58">        this.applicant = applicant;</span>
-<span class="nc" id="L59">    }</span>
+<span class="fc" id="L58">        this.applicant = applicant;</span>
+<span class="fc" id="L59">    }</span>
 
     public JobOffer getJobOffer() {
-<span class="nc" id="L62">        return jobOffer;</span>
+<span class="fc" id="L62">        return jobOffer;</span>
     }
 
     public void setJobOffer(JobOffer jobOffer) {
-<span class="nc" id="L66">        this.jobOffer = jobOffer;</span>
-<span class="nc" id="L67">    }</span>
+<span class="fc" id="L66">        this.jobOffer = jobOffer;</span>
+<span class="fc" id="L67">    }</span>
 
 <span class="nc" id="L69">    public Application(String CV) {</span>
 <span class="nc" id="L70">        this.CV = CV;</span>
 <span class="nc" id="L71">    }</span>
 
-<span class="nc" id="L73">    public Application() {</span>
-<span class="nc" id="L74">    }</span>
+<span class="fc" id="L73">    public Application() {</span>
+<span class="fc" id="L74">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

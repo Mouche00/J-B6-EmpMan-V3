@@ -24,7 +24,7 @@ public class JobOffer {
     @Lob
     private String criteria;
 
-<span class="nc" id="L27">    @Enumerated(EnumType.STRING)</span>
+<span class="pc" id="L27">    @Enumerated(EnumType.STRING)</span>
     private JobOfferStatus status = JobOfferStatus.OPEN;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -35,12 +35,12 @@ public class JobOffer {
     private Set&lt;Application&gt; applications;
 
     public UUID getId() {
-<span class="nc" id="L38">        return id;</span>
+<span class="fc" id="L38">        return id;</span>
     }
 
     public void setId(UUID id) {
-<span class="nc" id="L42">        this.id = id;</span>
-<span class="nc" id="L43">    }</span>
+<span class="fc" id="L42">        this.id = id;</span>
+<span class="fc" id="L43">    }</span>
 
     public String getTitle() {
 <span class="nc" id="L46">        return title;</span>
@@ -67,12 +67,12 @@ public class JobOffer {
 <span class="nc" id="L67">    }</span>
 
     public LocalDate getDeadline() {
-<span class="nc" id="L70">        return deadline;</span>
+<span class="fc" id="L70">        return deadline;</span>
     }
 
     public void setDeadline(LocalDate deadline) {
-<span class="nc" id="L74">        this.deadline = deadline;</span>
-<span class="nc" id="L75">    }</span>
+<span class="fc" id="L74">        this.deadline = deadline;</span>
+<span class="fc" id="L75">    }</span>
 
     public String getCriteria() {
 <span class="nc" id="L78">        return criteria;</span>
@@ -83,12 +83,12 @@ public class JobOffer {
 <span class="nc" id="L83">    }</span>
 
     public JobOfferStatus getStatus() {
-<span class="nc" id="L86">        return status;</span>
+<span class="fc" id="L86">        return status;</span>
     }
 
     public void setStatus(JobOfferStatus status) {
-<span class="nc" id="L90">        this.status = status;</span>
-<span class="nc" id="L91">    }</span>
+<span class="fc" id="L90">        this.status = status;</span>
+<span class="fc" id="L91">    }</span>
 
     public Recruiter getRecruiter() {
 <span class="nc" id="L94">        return recruiter;</span>
@@ -115,7 +115,11 @@ public class JobOffer {
 <span class="nc" id="L115">        this.recruiter = recruiter;</span>
 <span class="nc" id="L116">    }</span>
 
-<span class="nc" id="L118">    public JobOffer() {</span>
-<span class="nc" id="L119">    }</span>
+<span class="nc" id="L118">    public JobOffer(LocalDate deadline) {</span>
+<span class="nc" id="L119">        this.deadline = deadline;</span>
+<span class="nc" id="L120">    }</span>
+
+<span class="fc" id="L122">    public JobOffer() {</span>
+<span class="fc" id="L123">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,2 +1,5 @@
 services/implementations/LeaveServiceImplTest.class
 services/implementations/UserServiceImplTest.class
+services/implementations/EmployeeServiceImplTest.class
+services/implementations/JobOfferServiceImplTest.class
+services/implementations/ApplicationServiceImplTest.class

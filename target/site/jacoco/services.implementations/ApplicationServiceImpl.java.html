@@ -8,24 +8,24 @@ import services.interfaces.ApplicationService;
 
 import javax.inject.Inject;
 
-<span class="nc" id="L11">public class ApplicationServiceImpl extends GenericServiceImpl&lt;Application, String&gt; implements ApplicationService {</span>
+<span class="fc" id="L11">public class ApplicationServiceImpl extends GenericServiceImpl&lt;Application, String&gt; implements ApplicationService {</span>
 
     @Inject
     private ApplicationDAO applicationDAO;
 
     @Override
     public boolean save(Application application) {
-<span class="nc" id="L18">        BaseUser user = application.getApplicant();</span>
-<span class="nc" id="L19">        JobOffer jobOffer = application.getJobOffer();</span>
-<span class="nc bnc" id="L20" title="All 2 branches missed.">        if(checkIfExists(user, jobOffer)) {</span>
-<span class="nc" id="L21">            return genericDAO.save(application);</span>
+<span class="fc" id="L18">        BaseUser user = application.getApplicant();</span>
+<span class="fc" id="L19">        JobOffer jobOffer = application.getJobOffer();</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if(checkIfExists(user, jobOffer)) {</span>
+<span class="fc" id="L21">            return genericDAO.save(application);</span>
         }
-<span class="nc" id="L23">        return false;</span>
+<span class="fc" id="L23">        return false;</span>
     }
 
     @Override
     public boolean checkIfExists(BaseUser user, JobOffer jobOffer) {
-<span class="nc" id="L28">        return applicationDAO.findByForeignKeys(user.getId(), jobOffer.getId()).isPresent();</span>
+<span class="fc" id="L28">        return applicationDAO.findByForeignKeys(user.getId(), jobOffer.getId()).isPresent();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

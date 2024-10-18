@@ -11,26 +11,26 @@ import java.util.List;
 
 @RequestScoped
 @Named(&quot;employeeServiceImpl&quot;)
-<span class="nc" id="L14">public class EmployeeServiceImpl extends GenericServiceImpl&lt;Employee, String&gt; implements EmployeeService {</span>
+<span class="fc" id="L14">public class EmployeeServiceImpl extends GenericServiceImpl&lt;Employee, String&gt; implements EmployeeService {</span>
     @Inject
     private EmployeeDAO employeeDAO;
 
     @Override
     public List&lt;Employee&gt; findAll(String searchTerm) {
-<span class="nc" id="L20">        return employeeDAO.findAll(searchTerm);</span>
+<span class="fc" id="L20">        return employeeDAO.findAll(searchTerm);</span>
     }
 
     @Override
     public List&lt;Employee&gt; filter(String post, String department) {
-<span class="nc" id="L25">        List&lt;Employee&gt; employees = employeeDAO.getAll();</span>
-<span class="nc bnc" id="L26" title="All 2 branches missed.">        if(post != null) {</span>
-<span class="nc" id="L27">            employees = employees.stream().filter(e -&gt; e.getPost().contains(post)).toList();</span>
+<span class="fc" id="L25">        List&lt;Employee&gt; employees = employeeDAO.getAll();</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if(post != null) {</span>
+<span class="fc" id="L27">            employees = employees.stream().filter(e -&gt; e.getPost().contains(post)).toList();</span>
         }
 
-<span class="nc bnc" id="L30" title="All 2 branches missed.">        if(department != null) {</span>
-<span class="nc" id="L31">            employees = employees.stream().filter(e -&gt; e.getDepartment().getName().equals(department)).toList();</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if(department != null) {</span>
+<span class="fc" id="L31">            employees = employees.stream().filter(e -&gt; e.getDepartment().getName().equals(department)).toList();</span>
         }
-<span class="nc" id="L33">        return employees;</span>
+<span class="fc" id="L33">        return employees;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
