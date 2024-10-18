@@ -1,33 +1,21 @@
 package services.implementations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import daos.interfaces.EmployeeDAO;
 import daos.interfaces.ModHistoryDAO;
 import daos.interfaces.SalaryHistoryDAO;
 import daos.interfaces.UserDAO;
 import events.LeaveEvent;
-import models.Employee;
 import models.ModHistory;
 import models.SalaryHistory;
 import models.User;
-import services.interfaces.EmployeeService;
 import services.interfaces.UserService;
-import utils.JPAUtil;
 import utils.JSONUtil;
-import utils.ObjectMapperFactory;
 import utils.ReflectionUtil;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +32,12 @@ public class UserServiceImpl extends GenericServiceImpl<User, String> implements
     @Inject
     private SalaryHistoryDAO salaryHistoryDAO;
 
+    @Inject
+    private ReflectionUtil reflectionUtil;
+
+    @Inject
+    private JSONUtil jsonUtil;
+
     @Override
     public Optional<User> find(String id) {
         return genericDAO.find(UUID.fromString(id));
@@ -54,13 +48,13 @@ public class UserServiceImpl extends GenericServiceImpl<User, String> implements
         Optional<User> existingUser = find(user.getId().toString());
 
         existingUser.ifPresent(u -> {
-            Map<String, Object> mods = ReflectionUtil.trackModifiedAttributes(u, user);
+            Map<String, Object> mods = reflectionUtil.trackModifiedAttributes(u, user);
             if (mods.isEmpty() || mods.containsKey("leaveBalance")) return;
 
             mods.putIfAbsent("salary", u.getSalary());
             mods.putIfAbsent("children", u.getChildren());
 
-            String modsString = JSONUtil.serializeMap(mods);
+            String modsString = jsonUtil.serializeMap(mods);
             if (mods.size() == 2 && mods.containsKey("salary") && mods.containsKey("children")) {
                 salaryHistoryDAO.save(new SalaryHistory(modsString, LocalDate.now(), user));
             } else {
@@ -83,28 +77,27 @@ public class UserServiceImpl extends GenericServiceImpl<User, String> implements
 
     @Override
     public Map<LocalDate, Double> getSalaryHistory(String id) {
-        Optional<User> user = find(id);
+        Optional<User> userOptional = find(id);
+        if(userOptional.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        User user = userOptional.get();
 
-        EntityManager em = JPAUtil.getEntityManager();
-        String jpql = "SELECT s FROM SalaryHistory s WHERE s.user.id = :id";
-        List<SalaryHistory> salaryHistory = em.createQuery(jpql, SalaryHistory.class)
-                .setParameter("id", UUID.fromString(id))
-                .getResultList();
-
+        List<SalaryHistory> salaryHistory = salaryHistoryDAO.findByUserId(user.getId());
 
         Map<LocalDate, Double> finalSalaryHistory = salaryHistory.stream()
                 .collect(Collectors.toMap(
                         SalaryHistory::getDate,
                         history -> {
                             String modificationsJson = history.getModifications();
-                            Optional<Map<String, Object>> modificationsMap = JSONUtil.convertJsonToMap(modificationsJson);
+                            Optional<Map<String, Object>> modificationsMap = jsonUtil.convertJsonToMap(modificationsJson);
                             return modificationsMap
                                     .map(m -> calculateFinalSalary((double) m.get("salary"), (int) m.get("children")))
                                     .orElse(0.0);
                         }
                 ));
 
-        user.ifPresent(u -> finalSalaryHistory.put(LocalDate.now(), calculateFinalSalary(u.getSalary(), u.getChildren())));
+        finalSalaryHistory.put(LocalDate.now(), calculateFinalSalary(user.getSalary(), user.getChildren()));
 
         return finalSalaryHistory;
     }

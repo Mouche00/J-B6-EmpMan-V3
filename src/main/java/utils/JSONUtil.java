@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class JSONUtil {
 
-    public static String serializeMap(Map<String, Object> modifiedAttributes) {
+    public String serializeMap(Map<String, Object> modifiedAttributes) {
         try {
             return ObjectMapperFactory.getObjectMapper().writeValueAsString(modifiedAttributes);
         } catch (JsonProcessingException e) {
@@ -18,31 +18,30 @@ public class JSONUtil {
         }
     }
 
-    public static List<Map<String, Object>> mergeJsonStringListToMap(List<String> jsonStrings) {
+    public List<Map<String, Object>> mergeJsonStringListToMap(List<String> jsonStrings) {
         List<Map<String, Object>> mapList = jsonStrings.stream()
-                .map(JSONUtil::convertJsonToMap) // Convert each JSON string to a Map
-                .filter(Optional::isPresent)          // Filter out any invalid JSON strings
-                .map(Optional::get)                   // Get the actual Map from Optional
+                .map(this::convertJsonToMap)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
 
-        // Merge all the maps into a single map
         return mapList;
     }
 
-    public static Optional<Map<String, Object>> convertJsonToMap(String jsonString) {
+    public Optional<Map<String, Object>> convertJsonToMap(String jsonString) {
         try {
             return Optional.of(ObjectMapperFactory.getObjectMapper().readValue(jsonString, new TypeReference<>() {}));
         } catch (JsonProcessingException e) {
             System.err.println("Error processing JSON: " + e.getMessage());
-            return Optional.empty(); // Return empty Optional on error
+            return Optional.empty();
         }
     }
 
-    public static Map<String, Object> mergeMaps(List<Map<String, Object>> maps) {
+    public Map<String, Object> mergeMaps(List<Map<String, Object>> maps) {
         return maps.stream()
-                .flatMap(map -> map.entrySet().stream())  // Flatten the maps into individual entries
+                .flatMap(map -> map.entrySet().stream())
                 .collect(Collectors.toMap(
-                        Map.Entry::getKey,   // Use the key as-is
+                        Map.Entry::getKey,
                         Map.Entry::getValue
                 ));
     }
