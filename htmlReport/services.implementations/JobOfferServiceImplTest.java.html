@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JobOfferServiceImplTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">services.implementations</a> &gt; <span class="el_source">JobOfferServiceImplTest.java</span></div><h1>JobOfferServiceImplTest.java</h1><pre class="source lang-java linenums">package services.implementations;
+
+import daos.interfaces.GenericDAO;
+import models.JobOffer;
+import models.enums.JobOfferStatus;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import services.interfaces.JobOfferService;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+
+<span class="fc" id="L21">@ExtendWith(MockitoExtension.class)</span>
+<span class="fc" id="L22">public class JobOfferServiceImplTest {</span>
+
+    @Mock
+    private GenericDAO&lt;JobOffer, String&gt; genericDAO;
+
+    @InjectMocks
+    private JobOfferServiceImpl jobOfferService;
+
+    @Test
+    void testCheckDeadlines_updatesExpiredJobOffers() {
+        // Arrange
+<span class="fc" id="L33">        JobOffer offer1 = new JobOffer();</span>
+<span class="fc" id="L34">        offer1.setStatus(JobOfferStatus.OPEN);</span>
+<span class="fc" id="L35">        offer1.setDeadline(LocalDate.now().minusDays(1)); // Already past deadline</span>
+
+<span class="fc" id="L37">        JobOffer offer2 = new JobOffer();</span>
+<span class="fc" id="L38">        offer2.setStatus(JobOfferStatus.OPEN);</span>
+<span class="fc" id="L39">        offer2.setDeadline(LocalDate.now().plusDays(1)); // Not past deadline</span>
+
+<span class="fc" id="L41">        JobOffer offer3 = new JobOffer();</span>
+<span class="fc" id="L42">        offer3.setStatus(JobOfferStatus.EXPIRED); // Already expired</span>
+<span class="fc" id="L43">        offer3.setDeadline(LocalDate.now().minusDays(2));</span>
+
+<span class="fc" id="L45">        List&lt;JobOffer&gt; jobOffers = Arrays.asList(offer1, offer2, offer3);</span>
+
+<span class="fc" id="L47">        when(genericDAO.getAll()).thenReturn(jobOffers); // Mock the DAO to return the job offers list</span>
+
+        // Act
+<span class="fc" id="L50">        jobOfferService.checkDeadlines();</span>
+
+        // Assert
+        // Verify that the status of offer1 has been updated to EXPIRED
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        assert offer1.getStatus() == JobOfferStatus.EXPIRED;</span>
+
+        // Verify that the update method was called only once for offer1 (expired job offer)
+<span class="fc" id="L57">        verify(genericDAO, times(1)).update(offer1);</span>
+
+        // Verify that offer2 and offer3 were not updated
+<span class="fc" id="L60">        verify(genericDAO, never()).update(offer2);</span>
+<span class="fc" id="L61">        verify(genericDAO, never()).update(offer3);</span>
+<span class="fc" id="L62">    }</span>
+
+    @Test
+    void testCheckDeadlines_noUpdatesIfNoOpenExpiredJobOffers() {
+        // Arrange
+<span class="fc" id="L67">        JobOffer offer1 = new JobOffer();</span>
+<span class="fc" id="L68">        offer1.setStatus(JobOfferStatus.EXPIRED);</span>
+<span class="fc" id="L69">        offer1.setDeadline(LocalDate.now().minusDays(2)); // Already expired</span>
+
+<span class="fc" id="L71">        JobOffer offer2 = new JobOffer();</span>
+<span class="fc" id="L72">        offer2.setStatus(JobOfferStatus.CLOSED);</span>
+<span class="fc" id="L73">        offer2.setDeadline(LocalDate.now().minusDays(1)); // Already closed, past deadline</span>
+
+<span class="fc" id="L75">        List&lt;JobOffer&gt; jobOffers = Arrays.asList(offer1, offer2);</span>
+
+<span class="fc" id="L77">        when(genericDAO.getAll()).thenReturn(jobOffers); // Mock the DAO to return the job offers list</span>
+
+        // Act
+<span class="fc" id="L80">        jobOfferService.checkDeadlines();</span>
+
+        // Assert
+        // Verify that no updates were made because no open jobs are past the deadline
+<span class="fc" id="L84">        verify(genericDAO, never()).update(any(JobOffer.class));</span>
+<span class="fc" id="L85">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

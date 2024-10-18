@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserServiceImplTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">services.implementations</a> &gt; <span class="el_source">UserServiceImplTest.java</span></div><h1>UserServiceImplTest.java</h1><pre class="source lang-java linenums">package services.implementations;
+
+import daos.interfaces.GenericDAO;
+import daos.interfaces.ModHistoryDAO;
+import daos.interfaces.SalaryHistoryDAO;
+import daos.interfaces.UserDAO;
+import events.LeaveEvent;
+import models.Employee;
+import models.ModHistory;
+import models.SalaryHistory;
+import models.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import utils.JPAUtil;
+import utils.JSONUtil;
+import utils.ObjectMapperFactory;
+import utils.ReflectionUtil;
+
+import javax.inject.Inject;
+import javax.persistence.TypedQuery;
+import java.time.LocalDate;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+<span class="fc" id="L33">class UserServiceImplTest {</span>
+
+    @Mock
+    private ReflectionUtil reflectionUtil;
+
+    @Mock
+    private GenericDAO&lt;User, UUID&gt; genericDAO;
+
+    @Mock
+    private UserDAO userDAO;
+
+    @Mock
+    private ModHistoryDAO modHistoryDAO;
+
+    @Mock
+    private SalaryHistoryDAO salaryHistoryDAO;
+
+    @Mock
+    private JSONUtil jsonUtil;
+
+    @InjectMocks
+    private UserServiceImpl userService;
+
+    private Employee mockUser;
+    private Employee updatedUser;
+
+    @BeforeEach
+    void setUp() {
+<span class="fc" id="L61">        mockUser = new Employee();</span>
+<span class="fc" id="L62">        mockUser.setId(UUID.randomUUID());</span>
+<span class="fc" id="L63">        mockUser.setSalary(5000.0);</span>
+<span class="fc" id="L64">        mockUser.setChildren(2);</span>
+<span class="fc" id="L65">        mockUser.setLeaveBalance(20);</span>
+
+<span class="fc" id="L67">        updatedUser = new Employee();</span>
+<span class="fc" id="L68">        updatedUser.setId(mockUser.getId());</span>
+<span class="fc" id="L69">        updatedUser.setSalary(5500.0);</span>
+<span class="fc" id="L70">        updatedUser.setChildren(3);</span>
+<span class="fc" id="L71">        updatedUser.setLeaveBalance(18);</span>
+<span class="fc" id="L72">    }</span>
+
+    @Test
+    void testFind() {
+<span class="fc" id="L76">        when(genericDAO.find(any(UUID.class))).thenReturn(Optional.of(mockUser));</span>
+
+<span class="fc" id="L78">        Optional&lt;User&gt; result = userService.find(mockUser.getId().toString());</span>
+
+<span class="fc" id="L80">        assertTrue(result.isPresent());</span>
+<span class="fc" id="L81">        assertEquals(mockUser.getId(), result.get().getId());</span>
+<span class="fc" id="L82">        verify(genericDAO, times(1)).find(any(UUID.class));</span>
+<span class="fc" id="L83">    }</span>
+
+    @Test
+    void testUpdateWithSalaryAndChildrenModified() {
+<span class="fc" id="L87">        Map&lt;String, Object&gt; modifications = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L88">        modifications.put(&quot;salary&quot;, 5500.0);</span>
+<span class="fc" id="L89">        modifications.put(&quot;children&quot;, 3);</span>
+
+<span class="fc" id="L91">        when(genericDAO.find(any(UUID.class))).thenReturn(Optional.of(mockUser));</span>
+<span class="fc" id="L92">        when(genericDAO.update(any())).thenReturn(true);</span>
+<span class="fc" id="L93">        when(reflectionUtil.trackModifiedAttributes(any(), any())).thenReturn(modifications);</span>
+<span class="fc" id="L94">        when(jsonUtil.serializeMap(any())).thenReturn(&quot;{ \&quot;salary\&quot;: 5500.0, \&quot;children\&quot;: 3 }&quot;);</span>
+
+<span class="fc" id="L96">        boolean result = userService.update(updatedUser);</span>
+
+<span class="fc" id="L98">        assertTrue(result);</span>
+<span class="fc" id="L99">        verify(salaryHistoryDAO, times(1)).save(any(SalaryHistory.class));</span>
+<span class="fc" id="L100">        verify(modHistoryDAO, times(0)).save(any(ModHistory.class));</span>
+<span class="fc" id="L101">        verify(genericDAO, times(1)).update(any(User.class));</span>
+<span class="fc" id="L102">    }</span>
+
+    @Test
+    void testUpdateWithNoModifications() {
+<span class="fc" id="L106">        when(genericDAO.find(any(UUID.class))).thenReturn(Optional.of(mockUser));</span>
+<span class="fc" id="L107">        when(genericDAO.update(any())).thenReturn(true);</span>
+<span class="fc" id="L108">        when(reflectionUtil.trackModifiedAttributes(any(), any())).thenReturn(Collections.emptyMap());</span>
+
+<span class="fc" id="L110">        boolean result = userService.update(mockUser);</span>
+
+<span class="fc" id="L112">        assertTrue(result);</span>
+<span class="fc" id="L113">        verify(salaryHistoryDAO, times(0)).save(any(SalaryHistory.class));</span>
+<span class="fc" id="L114">        verify(modHistoryDAO, times(0)).save(any(ModHistory.class));</span>
+<span class="fc" id="L115">        verify(genericDAO, times(1)).update(any(User.class));</span>
+<span class="fc" id="L116">    }</span>
+
+    @Test
+    void testFindAll() {
+<span class="fc" id="L120">        List&lt;User&gt; users = Arrays.asList(mockUser, updatedUser);</span>
+<span class="fc" id="L121">        when(userDAO.findAll(anyString())).thenReturn(users);</span>
+
+<span class="fc" id="L123">        List&lt;User&gt; result = userService.findAll(&quot;test&quot;);</span>
+
+<span class="fc" id="L125">        assertEquals(2, result.size());</span>
+<span class="fc" id="L126">        verify(userDAO, times(1)).findAll(anyString());</span>
+<span class="fc" id="L127">    }</span>
+
+    @Test
+    void testGetSalaryHistory() {
+<span class="fc" id="L131">        SalaryHistory history = new SalaryHistory(&quot;{ \&quot;salary\&quot;: 5500.0, \&quot;children\&quot;: 3 }&quot;, LocalDate.of(2022, 10, 18), mockUser);</span>
+<span class="fc" id="L132">        List&lt;SalaryHistory&gt; salaryHistories = Collections.singletonList(history);</span>
+
+<span class="fc" id="L134">        when(genericDAO.find(any(UUID.class))).thenReturn(Optional.of(mockUser));</span>
+<span class="fc" id="L135">        when(salaryHistoryDAO.findByUserId(any(UUID.class))).thenReturn(salaryHistories);</span>
+<span class="fc" id="L136">        when(jsonUtil.convertJsonToMap(anyString())).thenReturn(Optional.of(Map.of(&quot;salary&quot;, 5500.0, &quot;children&quot;, 3)));</span>
+
+<span class="fc" id="L138">        Map&lt;LocalDate, Double&gt; salaryHistory = userService.getSalaryHistory(mockUser.getId().toString());</span>
+
+<span class="fc" id="L140">        assertEquals(2, salaryHistory.size());</span>
+<span class="fc" id="L141">        assertTrue(salaryHistory.containsKey(LocalDate.of(2022, 10, 18)));</span>
+<span class="fc" id="L142">        assertTrue(salaryHistory.containsKey(LocalDate.now()));</span>
+
+<span class="fc" id="L144">    }</span>
+
+    @Test
+    void testHandleLeaveEvent() {
+<span class="fc" id="L148">        LeaveEvent leaveEvent = new LeaveEvent(5, mockUser);</span>
+<span class="fc" id="L149">        when(genericDAO.find(any(UUID.class))).thenReturn(Optional.of(mockUser));</span>
+
+<span class="fc" id="L151">        userService.handleLeaveEvent(leaveEvent);</span>
+
+<span class="fc" id="L153">        verify(genericDAO, times(1)).update(any(User.class));</span>
+<span class="fc" id="L154">        assertEquals(15, mockUser.getLeaveBalance());</span>
+<span class="fc" id="L155">    }</span>
+
+    @Test
+    void testFindByEmail() {
+<span class="fc" id="L159">        when(userDAO.findByEmail(anyString())).thenReturn(Optional.of(mockUser));</span>
+
+<span class="fc" id="L161">        Optional&lt;User&gt; foundUser = userService.findByEmail(anyString());</span>
+
+<span class="fc" id="L163">        assertTrue(foundUser.isPresent());</span>
+<span class="fc" id="L164">        verify(userDAO, atMostOnce()).findByEmail(anyString());</span>
+<span class="fc" id="L165">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

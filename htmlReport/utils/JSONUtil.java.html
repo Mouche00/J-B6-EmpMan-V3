@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSONUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">utils</a> &gt; <span class="el_source">JSONUtil.java</span></div><h1>JSONUtil.java</h1><pre class="source lang-java linenums">package utils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L11">public class JSONUtil {</span>
+
+    public String serializeMap(Map&lt;String, Object&gt; modifiedAttributes) {
+        try {
+<span class="nc" id="L15">            return ObjectMapperFactory.getObjectMapper().writeValueAsString(modifiedAttributes);</span>
+<span class="nc" id="L16">        } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L17">            throw new RuntimeException(e);</span>
+        }
+    }
+
+//    public List&lt;Map&lt;String, Object&gt;&gt; mergeJsonStringListToMap(List&lt;String&gt; jsonStrings) {
+//        List&lt;Map&lt;String, Object&gt;&gt; mapList = jsonStrings.stream()
+//                .map(this::convertJsonToMap)
+//                .filter(Optional::isPresent)
+//                .map(Optional::get)
+//                .collect(Collectors.toList());
+//
+//        return mapList;
+//    }
+
+    public Optional&lt;Map&lt;String, Object&gt;&gt; convertJsonToMap(String jsonString) {
+        try {
+<span class="nc" id="L33">            return Optional.of(ObjectMapperFactory.getObjectMapper().readValue(jsonString, new TypeReference&lt;&gt;() {}));</span>
+<span class="nc" id="L34">        } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L35">            System.err.println(&quot;Error processing JSON: &quot; + e.getMessage());</span>
+<span class="nc" id="L36">            return Optional.empty();</span>
+        }
+    }
+
+//    public Map&lt;String, Object&gt; mergeMaps(List&lt;Map&lt;String, Object&gt;&gt; maps) {
+//        return maps.stream()
+//                .flatMap(map -&gt; map.entrySet().stream())
+//                .collect(Collectors.toMap(
+//                        Map.Entry::getKey,
+//                        Map.Entry::getValue
+//                ));
+//    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

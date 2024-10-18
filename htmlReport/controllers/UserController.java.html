@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">controllers</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package controllers;
+
+import models.Employee;
+import models.Leave;
+import models.User;
+import services.interfaces.EmployeeService;
+import services.interfaces.LeaveService;
+import services.interfaces.UserService;
+
+import javax.inject.Inject;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+
+@WebServlet(&quot;/user&quot;)
+<span class="nc" id="L18">public class UserController extends HttpServlet {</span>
+    @Inject
+    private LeaveService leaveService;
+
+    @Inject
+    private UserService userService;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+
+<span class="nc" id="L27">        User user = userService.find(&quot;5dfa0617-c88f-4d14-85e2-26c4b009a8a9&quot;).get();</span>
+<span class="nc" id="L28">        user.setSalary(10000);</span>
+<span class="nc" id="L29">        user.setChildren(1);</span>
+<span class="nc" id="L30">        userService.update(user);</span>
+<span class="nc" id="L31">        userService.getSalaryHistory(&quot;5dfa0617-c88f-4d14-85e2-26c4b009a8a9&quot;);</span>
+
+<span class="nc" id="L33">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

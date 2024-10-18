@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Employee.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">models</a> &gt; <span class="el_source">Employee.java</span></div><h1>Employee.java</h1><pre class="source lang-java linenums">package models;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@DiscriminatorValue(&quot;employee&quot;)
+@Table(name = &quot;employees&quot;)
+public class Employee extends User {
+
+    protected String post;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;department_id&quot;)
+    private Department department;
+
+    public String getPost() {
+<span class="nc" id="L18">        return post;</span>
+    }
+
+    public void setPost(String post) {
+<span class="nc" id="L22">        this.post = post;</span>
+<span class="nc" id="L23">    }</span>
+
+    public Department getDepartment() {
+<span class="nc" id="L26">        return department;</span>
+    }
+
+    public void setDepartment(Department department) {
+<span class="nc" id="L30">        this.department = department;</span>
+<span class="nc" id="L31">    }</span>
+
+    public Employee(String name, String phone, String address, String email, String password, LocalDate DOB, String SSN, LocalDate hiringDate, double salary, int children, int leaveBalance, String post, Department department) {
+<span class="nc" id="L34">        super(name, phone, address, email, password, DOB, SSN, &quot;employee&quot;, hiringDate, salary, children, leaveBalance);</span>
+<span class="nc" id="L35">        this.post = post;</span>
+<span class="nc" id="L36">        this.department = department;</span>
+<span class="nc" id="L37">    }</span>
+
+<span class="fc" id="L39">    public Employee() {</span>
+<span class="fc" id="L40">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

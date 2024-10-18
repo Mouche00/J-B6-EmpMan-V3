@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LeaveController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">J-B6-EmpMan-V3</a> &gt; <a href="index.source.html" class="el_package">controllers</a> &gt; <span class="el_source">LeaveController.java</span></div><h1>LeaveController.java</h1><pre class="source lang-java linenums">package controllers;
+
+import daos.implementations.DepartmentDAOImpl;
+import daos.implementations.EmployeeDAOImpl;
+import daos.implementations.LeaveDAOImpl;
+import models.Department;
+import models.Employee;
+import models.Leave;
+import models.User;
+import services.implementations.EmployeeServiceImpl;
+import services.implementations.LeaveServiceImpl;
+import services.interfaces.DepartmentService;
+import services.interfaces.EmployeeService;
+import services.interfaces.LeaveService;
+import services.interfaces.UserService;
+import utils.JPAUtil;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.UUID;
+
+@WebServlet(&quot;/leave/*&quot;)
+<span class="nc" id="L31">public class LeaveController extends HttpServlet {</span>
+    @Inject
+    private LeaveService leaveService;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+
+//        Employee employee = employeeService.find(&quot;85f616af-5a4b-46ea-924e-7bae0fdc8282&quot;).get();
+//
+//        Leave leave = new Leave(LocalDate.parse(&quot;2024-10-10&quot;), LocalDate.parse(&quot;2024-10-15&quot;), &quot;Absence&quot;, LocalDate.parse(&quot;2024-10-10&quot;), employee);
+//        leaveService.save(leave);
+<span class="nc" id="L41">    }</span>
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+<span class="nc" id="L45">        String fullUri = request.getRequestURI();</span>
+<span class="nc" id="L46">        String contextPath = request.getContextPath();</span>
+<span class="nc" id="L47">        String servletPath = request.getServletPath();</span>
+
+<span class="nc" id="L49">        String uriAfterServletUrl = fullUri.substring(contextPath.length() + servletPath.length());</span>
+
+<span class="nc bnc" id="L51" title="All 4 branches missed.">        switch (uriAfterServletUrl) {</span>
+            case &quot;/save&quot;:
+<span class="nc" id="L53">                save(request, response);</span>
+<span class="nc" id="L54">                break;</span>
+            case &quot;/delete&quot;:
+    //                delete(request, response);
+<span class="nc" id="L57">                break;</span>
+            case &quot;/validate&quot;:
+<span class="nc" id="L59">                    validate(request, response);</span>
+<span class="nc" id="L60">                break;</span>
+            default:
+<span class="nc" id="L62">                throw new ServletException(&quot;Resource not found.&quot;);</span>
+        }
+<span class="nc" id="L64">    }</span>
+
+    private void save(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L67">        String startDate = request.getParameter(&quot;start-date&quot;);</span>
+<span class="nc" id="L68">        String endDate = request.getParameter(&quot;end-date&quot;);</span>
+<span class="nc" id="L69">        String reason = request.getParameter(&quot;reason&quot;);</span>
+
+<span class="nc" id="L71">        HttpSession session = request.getSession();</span>
+
+<span class="nc" id="L73">        leaveService.save(new Leave(LocalDate.parse(startDate), LocalDate.parse(endDate), reason, (User) session.getAttribute(&quot;loggedUser&quot;)));</span>
+
+<span class="nc" id="L75">        response.sendRedirect(&quot;/employee&quot;);</span>
+<span class="nc" id="L76">    }</span>
+
+    private void validate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+<span class="nc" id="L80">        String id = request.getParameter(&quot;id&quot;);</span>
+
+<span class="nc" id="L82">        leaveService.validate(id);</span>
+
+<span class="nc" id="L84">        response.sendRedirect(&quot;/employee&quot;);</span>
+<span class="nc" id="L85">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

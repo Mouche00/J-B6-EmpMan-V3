@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GenericServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">J-B6-EmpMan-V3</a> &gt; <a href="index.source.html" class="el_package">services.implementations</a> &gt; <span class="el_source">GenericServiceImpl.java</span></div><h1>GenericServiceImpl.java</h1><pre class="source lang-java linenums">package services.implementations;
+
+import daos.interfaces.GenericDAO;
+import services.interfaces.GenericService;
+
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+<span class="fc" id="L12">public abstract class GenericServiceImpl&lt;T, ID&gt; implements GenericService&lt;T, ID&gt; {</span>
+    @Inject
+    protected GenericDAO&lt;T, UUID&gt; genericDAO;
+
+    @Override
+    public boolean save(T entity) {
+<span class="nc" id="L18">        return genericDAO.save(entity);</span>
+    }
+
+    @Override
+    public boolean update(T entity) {
+<span class="nc" id="L23">        return genericDAO.update(entity);</span>
+    }
+
+    @Override
+    public boolean delete(ID id) {
+<span class="nc" id="L28">        Optional&lt;T&gt; entity = find(id);</span>
+<span class="nc" id="L29">        return entity.map(genericDAO::delete).orElse(false);</span>
+    }
+
+    @Override
+    public Optional&lt;T&gt; find(ID id) {
+<span class="fc" id="L34">        return genericDAO.find(UUID.fromString((String) id));</span>
+    }
+
+    @Override
+    public List&lt;T&gt; getAll() {
+<span class="nc" id="L39">        return genericDAO.getAll();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

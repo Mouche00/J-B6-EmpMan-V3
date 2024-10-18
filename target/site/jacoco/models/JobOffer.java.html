@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JobOffer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">J-B6-EmpMan-V3</a> &gt; <a href="index.source.html" class="el_package">models</a> &gt; <span class="el_source">JobOffer.java</span></div><h1>JobOffer.java</h1><pre class="source lang-java linenums">package models;
+
+import models.enums.JobOfferStatus;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Set;
+import java.util.UUID;
+
+@Entity
+@Table(name = &quot;job_offers&quot;)
+public class JobOffer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = &quot;UUID&quot;)
+    private UUID id;
+
+    private String title;
+    private String description;
+    private LocalDate publishDate;
+    private LocalDate deadline;
+
+    @Lob
+    private String criteria;
+
+<span class="nc" id="L27">    @Enumerated(EnumType.STRING)</span>
+    private JobOfferStatus status = JobOfferStatus.OPEN;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;recruiter_id&quot;)
+    private Recruiter recruiter;
+
+    @OneToMany(mappedBy = &quot;jobOffer&quot;)
+    private Set&lt;Application&gt; applications;
+
+    public UUID getId() {
+<span class="nc" id="L38">        return id;</span>
+    }
+
+    public void setId(UUID id) {
+<span class="nc" id="L42">        this.id = id;</span>
+<span class="nc" id="L43">    }</span>
+
+    public String getTitle() {
+<span class="nc" id="L46">        return title;</span>
+    }
+
+    public void setTitle(String title) {
+<span class="nc" id="L50">        this.title = title;</span>
+<span class="nc" id="L51">    }</span>
+
+    public String getDescription() {
+<span class="nc" id="L54">        return description;</span>
+    }
+
+    public void setDescription(String description) {
+<span class="nc" id="L58">        this.description = description;</span>
+<span class="nc" id="L59">    }</span>
+
+    public LocalDate getPublishDate() {
+<span class="nc" id="L62">        return publishDate;</span>
+    }
+
+    public void setPublishDate(LocalDate publishDate) {
+<span class="nc" id="L66">        this.publishDate = publishDate;</span>
+<span class="nc" id="L67">    }</span>
+
+    public LocalDate getDeadline() {
+<span class="nc" id="L70">        return deadline;</span>
+    }
+
+    public void setDeadline(LocalDate deadline) {
+<span class="nc" id="L74">        this.deadline = deadline;</span>
+<span class="nc" id="L75">    }</span>
+
+    public String getCriteria() {
+<span class="nc" id="L78">        return criteria;</span>
+    }
+
+    public void setCriteria(String criteria) {
+<span class="nc" id="L82">        this.criteria = criteria;</span>
+<span class="nc" id="L83">    }</span>
+
+    public JobOfferStatus getStatus() {
+<span class="nc" id="L86">        return status;</span>
+    }
+
+    public void setStatus(JobOfferStatus status) {
+<span class="nc" id="L90">        this.status = status;</span>
+<span class="nc" id="L91">    }</span>
+
+    public Recruiter getRecruiter() {
+<span class="nc" id="L94">        return recruiter;</span>
+    }
+
+    public void setRecruiter(Recruiter recruiter) {
+<span class="nc" id="L98">        this.recruiter = recruiter;</span>
+<span class="nc" id="L99">    }</span>
+
+    public Set&lt;Application&gt; getApplications() {
+<span class="nc" id="L102">        return applications;</span>
+    }
+
+    public void setApplications(Set&lt;Application&gt; applications) {
+<span class="nc" id="L106">        this.applications = applications;</span>
+<span class="nc" id="L107">    }</span>
+
+<span class="nc" id="L109">    public JobOffer(String title, String description, LocalDate publishDate, LocalDate deadline, String criteria, Recruiter recruiter) {</span>
+<span class="nc" id="L110">        this.title = title;</span>
+<span class="nc" id="L111">        this.description = description;</span>
+<span class="nc" id="L112">        this.publishDate = publishDate;</span>
+<span class="nc" id="L113">        this.deadline = deadline;</span>
+<span class="nc" id="L114">        this.criteria = criteria;</span>
+<span class="nc" id="L115">        this.recruiter = recruiter;</span>
+<span class="nc" id="L116">    }</span>
+
+<span class="nc" id="L118">    public JobOffer() {</span>
+<span class="nc" id="L119">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
