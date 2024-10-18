@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">J-B6-EmpMan-V3</a> &gt; <a href="index.source.html" class="el_package">models</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package models;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Set;
+import java.util.UUID;
+
+@Entity
+@DiscriminatorValue(&quot;user&quot;)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = &quot;user_type&quot;)
+@Table(name = &quot;users&quot;)
+public abstract class User extends BaseUser {
+
+    protected String password;
+
+    @Column(unique = true)
+    protected String SSN;
+
+    protected String role;
+    protected LocalDate hiringDate;
+    protected double salary;
+    protected int children;
+    protected int leaveBalance;
+
+    @OneToMany(mappedBy = &quot;user&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    protected Set&lt;Leave&gt; leaves;
+
+    @OneToMany(mappedBy = &quot;user&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected Set&lt;Leave&gt; modifications;
+
+    public UUID getId() {
+<span class="fc" id="L36">        return id;</span>
+    }
+
+    public void setId(UUID id) {
+<span class="fc" id="L40">        this.id = id;</span>
+<span class="fc" id="L41">    }</span>
+
+    public String getPassword() {
+<span class="nc" id="L44">        return password;</span>
+    }
+
+    public void setPassword(String password) {
+<span class="nc" id="L48">        this.password = password;</span>
+<span class="nc" id="L49">    }</span>
+
+    public String getSSN() {
+<span class="nc" id="L52">        return SSN;</span>
+    }
+
+    public void setSSN(String SSN) {
+<span class="nc" id="L56">        this.SSN = SSN;</span>
+<span class="nc" id="L57">    }</span>
+
+    public String getRole() {
+<span class="nc" id="L60">        return role;</span>
+    }
+
+    public LocalDate getHiringDate() {
+<span class="nc" id="L64">        return hiringDate;</span>
+    }
+
+    public void setHiringDate(LocalDate hiringDate) {
+<span class="nc" id="L68">        this.hiringDate = hiringDate;</span>
+<span class="nc" id="L69">    }</span>
+
+    public double getSalary() {
+<span class="fc" id="L72">        return salary;</span>
+    }
+
+    public void setSalary(double salary) {
+<span class="fc" id="L76">        this.salary = salary;</span>
+<span class="fc" id="L77">    }</span>
+
+    public int getChildren() {
+<span class="fc" id="L80">        return children;</span>
+    }
+
+    public void setChildren(int children) {
+<span class="fc" id="L84">        this.children = children;</span>
+<span class="fc" id="L85">    }</span>
+
+    public int getLeaveBalance() {
+<span class="fc" id="L88">        return leaveBalance;</span>
+    }
+
+    public void setLeaveBalance(int leaveBalance) {
+<span class="fc" id="L92">        this.leaveBalance = leaveBalance;</span>
+<span class="fc" id="L93">    }</span>
+
+    public Set&lt;Leave&gt; getLeaves() {
+<span class="nc" id="L96">        return leaves;</span>
+    }
+
+    public void setLeaves(Set&lt;Leave&gt; leaves) {
+<span class="nc" id="L100">        this.leaves = leaves;</span>
+<span class="nc" id="L101">    }</span>
+
+    public Set&lt;Leave&gt; getModifications() {
+<span class="nc" id="L104">        return modifications;</span>
+    }
+
+    public void setModifications(Set&lt;Leave&gt; modifications) {
+<span class="nc" id="L108">        this.modifications = modifications;</span>
+<span class="nc" id="L109">    }</span>
+
+    public User(String name, String phone, String address, String email, String password, LocalDate DOB, String SSN, String role, LocalDate hiringDate, double salary, int children, int leaveBalance) {
+<span class="nc" id="L112">        super(name, phone, address, email, DOB);</span>
+<span class="nc" id="L113">        this.password = password;</span>
+<span class="nc" id="L114">        this.SSN = SSN;</span>
+<span class="nc" id="L115">        this.role = role;</span>
+<span class="nc" id="L116">        this.hiringDate = hiringDate;</span>
+<span class="nc" id="L117">        this.salary = salary;</span>
+<span class="nc" id="L118">        this.children = children;</span>
+<span class="nc" id="L119">        this.leaveBalance = leaveBalance;</span>
+<span class="nc" id="L120">    }</span>
+
+<span class="fc" id="L122">    public User() {</span>
+<span class="fc" id="L123">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

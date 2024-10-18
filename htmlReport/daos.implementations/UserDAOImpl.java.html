@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDAOImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">daos.implementations</a> &gt; <span class="el_source">UserDAOImpl.java</span></div><h1>UserDAOImpl.java</h1><pre class="source lang-java linenums">package daos.implementations;
+
+import daos.interfaces.UserDAO;
+import models.User;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
+import javax.persistence.TypedQuery;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@RequestScoped
+@Named(&quot;userDAOImpl&quot;)
+public class UserDAOImpl extends GenericDAOImpl&lt;User, UUID&gt; implements UserDAO {
+
+    public UserDAOImpl() {
+<span class="nc" id="L18">        super(User.class);</span>
+<span class="nc" id="L19">    }</span>
+
+    @Override
+    public List&lt;User&gt; findAll(String searchTerm) {
+<span class="nc" id="L23">        String jpql =</span>
+                &quot;SELECT e &quot; +
+                        &quot;FROM User e &quot; +
+                        &quot;WHERE LOWER(e.name) LIKE :searchTerm &quot; +
+                        &quot;OR LOWER(e.email) LIKE :searchTerm&quot;;
+<span class="nc" id="L28">        String finalSearchTerm = &quot;%&quot; + searchTerm.toLowerCase() + &quot;%&quot;;</span>
+
+<span class="nc" id="L30">        return execute(entityManager -&gt; {</span>
+<span class="nc" id="L31">            TypedQuery&lt;User&gt; query = entityManager.createQuery(jpql, entityClass);</span>
+<span class="nc" id="L32">            query.setParameter(&quot;searchTerm&quot;, finalSearchTerm);</span>
+<span class="nc" id="L33">            return query.getResultList();</span>
+        });
+    }
+
+    @Override
+    public Optional&lt;User&gt; findByEmail(String email) {
+<span class="nc" id="L39">        String jpql = &quot;SELECT u FROM User u WHERE u.email = :email&quot;;</span>
+
+<span class="nc" id="L41">        return Optional.ofNullable(execute(entityManager -&gt; {</span>
+<span class="nc" id="L42">            TypedQuery&lt;User&gt; query = entityManager.createQuery(jpql, entityClass);</span>
+<span class="nc" id="L43">            query.setParameter(&quot;email&quot;, email);</span>
+<span class="nc" id="L44">            return query.getSingleResult();</span>
+        }));
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

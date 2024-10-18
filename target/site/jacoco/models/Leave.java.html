@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Leave.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">J-B6-EmpMan-V3</a> &gt; <a href="index.source.html" class="el_package">models</a> &gt; <span class="el_source">Leave.java</span></div><h1>Leave.java</h1><pre class="source lang-java linenums">package models;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.UUID;
+
+@Entity
+@Table(name = &quot;leaves&quot;)
+public class Leave {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = &quot;UUID&quot;)
+    private UUID id;
+
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String reason;
+    private LocalDate validatedAt;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;user_id&quot;)
+    @JsonIgnore
+    private User user;
+
+    public UUID getId() {
+<span class="nc" id="L28">        return id;</span>
+    }
+
+    public void setId(UUID id) {
+<span class="fc" id="L32">        this.id = id;</span>
+<span class="fc" id="L33">    }</span>
+
+    public LocalDate getStartDate() {
+<span class="fc" id="L36">        return startDate;</span>
+    }
+
+    public void setStartDate(LocalDate startDate) {
+<span class="fc" id="L40">        this.startDate = startDate;</span>
+<span class="fc" id="L41">    }</span>
+
+    public LocalDate getEndDate() {
+<span class="fc" id="L44">        return endDate;</span>
+    }
+
+    public void setEndDate(LocalDate endDate) {
+<span class="fc" id="L48">        this.endDate = endDate;</span>
+<span class="fc" id="L49">    }</span>
+
+    public String getReason() {
+<span class="nc" id="L52">        return reason;</span>
+    }
+
+    public void setReason(String reason) {
+<span class="nc" id="L56">        this.reason = reason;</span>
+<span class="nc" id="L57">    }</span>
+
+    public LocalDate getValidatedAt() {
+<span class="fc" id="L60">        return validatedAt;</span>
+    }
+
+    public void setValidatedAt(LocalDate validatedAt) {
+<span class="fc" id="L64">        this.validatedAt = validatedAt;</span>
+<span class="fc" id="L65">    }</span>
+
+    public User getUser() {
+<span class="fc" id="L68">        return user;</span>
+    }
+
+    public void setUser(User user) {
+<span class="fc" id="L72">        this.user = user;</span>
+<span class="fc" id="L73">    }</span>
+
+<span class="nc" id="L75">    public Leave(LocalDate startDate, LocalDate endDate, String reason, User user) {</span>
+<span class="nc" id="L76">        this.startDate = startDate;</span>
+<span class="nc" id="L77">        this.endDate = endDate;</span>
+<span class="nc" id="L78">        this.reason = reason;</span>
+<span class="nc" id="L79">        this.user = user;</span>
+<span class="nc" id="L80">    }</span>
+
+<span class="fc" id="L82">    public Leave() {</span>
+<span class="fc" id="L83">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

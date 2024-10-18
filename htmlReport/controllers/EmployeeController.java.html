@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">controllers</a> &gt; <span class="el_source">EmployeeController.java</span></div><h1>EmployeeController.java</h1><pre class="source lang-java linenums">package controllers;
+
+import daos.implementations.EmployeeDAOImpl;
+import models.Department;
+import models.Employee;
+import services.implementations.EmployeeServiceImpl;
+import services.interfaces.EmployeeService;
+
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.function.Consumer;
+
+@WebServlet(&quot;/employee&quot;)
+<span class="nc" id="L26">public class EmployeeController extends HttpServlet {</span>
+    @Inject
+    private EmployeeService employeeService;
+<span class="nc" id="L29">    private final String path = &quot;/WEB-INF/views/&quot;;</span>
+
+
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        String fullUri = request.getRequestURI();
+//        String contextPath = request.getContextPath();
+//        String servletPath = request.getServletPath();
+//
+//        String uriAfterServletUrl = fullUri.substring(contextPath.length() + servletPath.length());
+//
+//        switch (uriAfterServletUrl) {
+//            case &quot;/save&quot;:
+//                save(request, response);
+//                break;
+//            case &quot;/delete&quot;:
+//                delete(request, response);
+//                break;
+//            case &quot;/update&quot;:
+//                update(request, response);
+//                break;
+//            default:
+//                throw new ServletException(&quot;Resource not found.&quot;);
+//        }
+//    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+<span class="nc" id="L58">        String fullUri = request.getRequestURI();</span>
+<span class="nc" id="L59">        String contextPath = request.getContextPath();</span>
+<span class="nc" id="L60">        String servletPath = request.getServletPath();</span>
+
+<span class="nc" id="L62">        String uriAfterServletUrl = fullUri.substring(contextPath.length() + servletPath.length());</span>
+
+<span class="nc bnc" id="L64" title="All 3 branches missed.">        switch (uriAfterServletUrl) {</span>
+            case &quot;/create&quot;:
+<span class="nc" id="L66">                create(request, response);</span>
+<span class="nc" id="L67">                break;</span>
+            case &quot;/edit&quot;:
+<span class="nc" id="L69">                edit(request, response);</span>
+<span class="nc" id="L70">                break;</span>
+            default:
+<span class="nc" id="L72">                list(request, response);</span>
+        }
+<span class="nc" id="L74">    }</span>
+
+    private boolean setParameter(HttpServletRequest request, String parameter, Consumer&lt;String&gt; setter) {
+<span class="nc" id="L77">        String value = request.getParameter(parameter);</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        boolean canBeSet = value != null;</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (canBeSet) {</span>
+<span class="nc" id="L80">            setter.accept(value);</span>
+        }
+<span class="nc" id="L82">        return canBeSet;</span>
+    }
+
+
+//    private void update(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        HttpSession session = request.getSession();
+//        Employee employee = (Employee) session.getAttribute(&quot;employee&quot;);
+//
+//        setParameter(request,&quot;name&quot;, employee::setName);
+//        setParameter(request,&quot;email&quot;, employee::setEmail);
+//        setParameter(request,&quot;phone&quot;, employee::setPhone);
+//        setParameter(request,&quot;post&quot;, employee::setPost);
+//        setParameter(request,&quot;department&quot;, departmentId -&gt; employee.setDepartment(getDepartment(departmentId)));
+//
+//        employeeService.update(employee);
+//        addMessage(request, employee.getName() + &quot; updated successfully!&quot;);
+//        response.sendRedirect(&quot;/employees&quot;);
+//    }
+//
+    private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L102">        String id = request.getParameter(&quot;id&quot;);</span>
+<span class="nc" id="L103">        Optional&lt;Employee&gt; employee = employeeService.find(id);</span>
+<span class="nc" id="L104">        employee.ifPresent(e -&gt; {</span>
+<span class="nc" id="L105">            request.setAttribute(&quot;employee&quot;, e);</span>
+<span class="nc" id="L106">            HttpSession session = request.getSession();</span>
+<span class="nc" id="L107">            session.setAttribute(&quot;employee&quot;, e);</span>
+<span class="nc" id="L108">            session.setMaxInactiveInterval(10*60);</span>
+<span class="nc" id="L109">        });</span>
+<span class="nc" id="L110">        HttpSession session = request.getSession();</span>
+<span class="nc" id="L111">        List&lt;Employee&gt; employees = (List&lt;Employee&gt;) session.getAttribute(&quot;employees&quot;);</span>
+<span class="nc" id="L112">        request.setAttribute(&quot;employees&quot;, employees);</span>
+<span class="nc" id="L113">        request.getRequestDispatcher(&quot;/views/index.jsp&quot;).forward(request, response);</span>
+<span class="nc" id="L114">    }</span>
+//
+//    private void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        String id = request.getParameter(&quot;id&quot;);
+//        employeeService.delete(id);
+//        addMessage(request,  &quot;Employee deleted successfully!&quot;);
+//        response.sendRedirect(&quot;/employees&quot;);
+//    }
+
+    private Map&lt;UUID, Department&gt; getDepartments() {
+<span class="nc" id="L124">        ServletContext context = getServletContext();</span>
+<span class="nc" id="L125">        return (Map&lt;UUID, Department&gt;) context.getAttribute(&quot;departments&quot;);</span>
+    }
+
+    private Department getDepartment(String id) {
+<span class="nc" id="L129">        return (Department) getDepartments().get(UUID.fromString(id));</span>
+    }
+
+//    private void save(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        String name = request.getParameter(&quot;name&quot;);
+//        String email = request.getParameter(&quot;email&quot;);
+//        String phone = request.getParameter(&quot;phone&quot;);
+//        String post = request.getParameter(&quot;post&quot;);
+//        String departmentId = request.getParameter(&quot;department&quot;);
+//
+//        List&lt;String&gt; errorMessages = new ArrayList&lt;&gt;();
+//
+//        // Manual validation checks
+//        if (name == null || name.trim().isEmpty()) {
+//            errorMessages.add(&quot;Name cannot be empty&quot;);
+//        }
+//        if (email == null || !email.matches(&quot;^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$&quot;)) {
+//            errorMessages.add(&quot;Email should be valid&quot;);
+//        }
+//        if (phone == null || phone.trim().isEmpty()) {
+//            errorMessages.add(&quot;Phone cannot be empty&quot;);
+//        }
+//        if (post == null || post.trim().isEmpty()) {
+//            errorMessages.add(&quot;Post cannot be empty&quot;);
+//        }
+//        if (getDepartment(departmentId) == null) {
+//            errorMessages.add(&quot;Department cannot be null&quot;);
+//        }
+//
+//        if (errorMessages.isEmpty()) {
+//            Employee employee = new Employee();
+//            employeeService.save(employee);
+//            addMessage(request, employee.getName() +&quot; added successfully!&quot;);
+//        } else {
+//            addMessage(request, &quot;Failed to save employee&quot;);
+//        }
+//
+//        response.sendRedirect(&quot;/employees&quot;);
+//    }
+//
+//    private void addMessage(HttpServletRequest request, String message) {
+//        HttpSession session = request.getSession();
+//        List&lt;String&gt; messages = (List&lt;String&gt;) session.getAttribute(&quot;messages&quot;);
+//        if (messages == null) {
+//            messages = new ArrayList&lt;&gt;();
+//        }
+//        messages.add(LocalTime.now().format(DateTimeFormatter.ofPattern(&quot;HH:mm:ss&quot;)
+//) + &quot;: &quot; + message);
+//
+//        // Keep only the last three messages
+//        if (messages.size() &gt; 3) {
+//            messages = messages.subList(messages.size() - 3, messages.size());
+//        }
+//
+//        session.setAttribute(&quot;messages&quot;, messages);
+//    }
+
+    private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L187">        request.setAttribute(&quot;departments&quot;, getDepartments());</span>
+//        request.getRequestDispatcher(&quot;/views/form.jsp&quot;).forward(request, response);
+<span class="nc" id="L189">    }</span>
+
+    protected void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L192">        String searchTerm = request.getParameter(&quot;s&quot;);</span>
+<span class="nc" id="L193">        String filter = request.getParameter(&quot;dep&quot;);</span>
+<span class="nc" id="L194">        List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L195" title="All 4 branches missed.">        if (!(searchTerm == null || searchTerm.isEmpty())) {</span>
+<span class="nc" id="L196">            employees = employeeService.findAll(searchTerm);</span>
+<span class="nc bnc" id="L197" title="All 4 branches missed.">        } else if(!(filter == null || filter.isEmpty())) {</span>
+<span class="nc" id="L198">            employees = employeeService.filter(null, filter);</span>
+        } else {
+<span class="nc" id="L200">            employees = employeeService.getAll();</span>
+        }
+
+<span class="nc" id="L203">        HttpSession session = request.getSession();</span>
+<span class="nc" id="L204">        session.setAttribute(&quot;employees&quot;, employees);</span>
+<span class="nc" id="L205">        session.setAttribute(&quot;employee&quot;, null);</span>
+
+<span class="nc" id="L207">        request.setAttribute(&quot;employees&quot;, employees);</span>
+//        request.setAttribute(&quot;departments&quot;, getDepartments());
+<span class="nc" id="L209">        request.getRequestDispatcher(path + &quot;employee.jsp&quot;).forward(request, response);</span>
+<span class="nc" id="L210">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

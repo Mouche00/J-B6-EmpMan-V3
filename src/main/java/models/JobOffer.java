@@ -115,6 +115,10 @@ public class JobOffer {
         this.recruiter = recruiter;
     }
 
+    public JobOffer(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
     public JobOffer() {
     }
 }

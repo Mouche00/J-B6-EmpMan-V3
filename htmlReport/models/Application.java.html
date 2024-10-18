@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Application.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">models</a> &gt; <span class="el_source">Application.java</span></div><h1>Application.java</h1><pre class="source lang-java linenums">package models;
+
+import models.enums.ApplicationStatus;
+
+import javax.persistence.*;
+import java.util.UUID;
+
+@Entity
+@Table(name = &quot;applications&quot;)
+public class Application {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = &quot;UUID&quot;)
+    private UUID id;
+
+    private String CV;
+
+<span class="pc" id="L18">    @Enumerated(EnumType.STRING)</span>
+    private ApplicationStatus status = ApplicationStatus.RECEIVED;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;applicant_id&quot;)
+    private BaseUser applicant;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;job_offer_id&quot;)
+    private JobOffer jobOffer;
+
+    public UUID getId() {
+<span class="nc" id="L30">        return id;</span>
+    }
+
+    public void setId(UUID id) {
+<span class="nc" id="L34">        this.id = id;</span>
+<span class="nc" id="L35">    }</span>
+
+    public String getCV() {
+<span class="nc" id="L38">        return CV;</span>
+    }
+
+    public void setCV(String CV) {
+<span class="nc" id="L42">        this.CV = CV;</span>
+<span class="nc" id="L43">    }</span>
+
+    public ApplicationStatus getStatus() {
+<span class="nc" id="L46">        return status;</span>
+    }
+
+    public void setStatus(ApplicationStatus status) {
+<span class="nc" id="L50">        this.status = status;</span>
+<span class="nc" id="L51">    }</span>
+
+    public BaseUser getApplicant() {
+<span class="fc" id="L54">        return applicant;</span>
+    }
+
+    public void setApplicant(BaseUser applicant) {
+<span class="fc" id="L58">        this.applicant = applicant;</span>
+<span class="fc" id="L59">    }</span>
+
+    public JobOffer getJobOffer() {
+<span class="fc" id="L62">        return jobOffer;</span>
+    }
+
+    public void setJobOffer(JobOffer jobOffer) {
+<span class="fc" id="L66">        this.jobOffer = jobOffer;</span>
+<span class="fc" id="L67">    }</span>
+
+<span class="nc" id="L69">    public Application(String CV) {</span>
+<span class="nc" id="L70">        this.CV = CV;</span>
+<span class="nc" id="L71">    }</span>
+
+<span class="fc" id="L73">    public Application() {</span>
+<span class="fc" id="L74">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

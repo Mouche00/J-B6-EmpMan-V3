@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JPAUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">J-B6-EmpMan-V3</a> &gt; <a href="index.source.html" class="el_package">utils</a> &gt; <span class="el_source">JPAUtil.java</span></div><h1>JPAUtil.java</h1><pre class="source lang-java linenums">package utils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+// Bill Pugh Singleton
+public class JPAUtil {
+
+<span class="nc" id="L13">    private static final Logger logger = LoggerFactory.getLogger(JPAUtil.class);</span>
+
+    private JPAUtil() {}
+
+    private static class EntityManagerFactoryHolder {
+<span class="nc" id="L18">        private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = buildEntityManagerFactory();</span>
+    }
+
+    private static EntityManagerFactory buildEntityManagerFactory() {
+        try {
+<span class="nc" id="L23">            return Persistence.createEntityManagerFactory(&quot;main-unit&quot;);</span>
+<span class="nc" id="L24">        } catch (Throwable ex) {</span>
+<span class="nc" id="L25">            logger.error(&quot;Initial EntityManagerFactory creation failed.&quot;, ex);</span>
+<span class="nc" id="L26">            throw new ExceptionInInitializerError(ex);</span>
+        }
+    }
+
+    public static EntityManagerFactory getEntityManagerFactory() {
+<span class="nc" id="L31">        return EntityManagerFactoryHolder.ENTITY_MANAGER_FACTORY;</span>
+    }
+
+    public static EntityManager getEntityManager() {
+<span class="nc" id="L35">        return getEntityManagerFactory().createEntityManager();</span>
+    }
+
+    public static void close() {
+        try {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (EntityManagerFactoryHolder.ENTITY_MANAGER_FACTORY != null &amp;&amp;</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">                    EntityManagerFactoryHolder.ENTITY_MANAGER_FACTORY.isOpen()) {</span>
+<span class="nc" id="L42">                EntityManagerFactoryHolder.ENTITY_MANAGER_FACTORY.close();</span>
+            }
+<span class="nc" id="L44">        } catch (Exception e) {</span>
+<span class="nc" id="L45">            logger.error(&quot;Error while closing EntityManagerFactory&quot;, e);</span>
+<span class="nc" id="L46">        }</span>
+<span class="nc" id="L47">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

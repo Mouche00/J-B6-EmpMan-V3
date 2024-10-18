@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LeaveServiceImplTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">services.implementations</a> &gt; <span class="el_source">LeaveServiceImplTest.java</span></div><h1>LeaveServiceImplTest.java</h1><pre class="source lang-java linenums">package services.implementations;
+
+import daos.interfaces.GenericDAO;
+import events.LeaveEvent;
+import models.Employee;
+import models.Leave;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import javax.enterprise.event.Event;
+import java.time.LocalDate;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+<span class="fc" id="L22">public class LeaveServiceImplTest {</span>
+
+    @InjectMocks
+    private LeaveServiceImpl leaveService;
+
+    @Mock
+    private GenericDAO&lt;Leave, UUID&gt; genericDAO;
+
+    @Mock
+    private Event&lt;LeaveEvent&gt; leaveEvent;
+
+    @Test
+    void testSave_LeaveWithinBalance_ShouldSaveLeave() {
+<span class="fc" id="L35">        Leave leave = createLeave(5, 10);</span>
+<span class="fc" id="L36">        when(genericDAO.save(leave)).thenReturn(true);</span>
+
+<span class="fc" id="L38">        boolean result = leaveService.save(leave);</span>
+
+<span class="fc" id="L40">        assertTrue(result);</span>
+<span class="fc" id="L41">        verify(genericDAO, atMostOnce()).save(leave);</span>
+<span class="fc" id="L42">    }</span>
+
+    @Test
+    void testSave_LeaveExceedsBalance_ShouldNotSaveLeave() {
+<span class="fc" id="L46">        Leave leave = createLeave(15, 10);</span>
+
+<span class="fc" id="L48">        boolean result = leaveService.save(leave);</span>
+
+<span class="fc" id="L50">        assertFalse(result);</span>
+<span class="fc" id="L51">        verify(genericDAO, never()).save(leave);</span>
+<span class="fc" id="L52">    }</span>
+
+    @Test
+    void testValidate_ValidLeave_ShouldUpdateAndFireEvent() {
+<span class="fc" id="L56">        Leave leave = createLeave(5, 10); // Valid leave</span>
+<span class="fc" id="L57">        leave.setId(UUID.fromString(&quot;fe34d0c6-5377-4ab7-bd4b-a0b94ce44276&quot;));</span>
+<span class="fc" id="L58">        when(genericDAO.find(UUID.fromString(&quot;fe34d0c6-5377-4ab7-bd4b-a0b94ce44276&quot;))).thenReturn(Optional.of(leave));</span>
+<span class="fc" id="L59">        when(genericDAO.update(leave)).thenReturn(true);</span>
+
+<span class="fc" id="L61">        boolean result = leaveService.validate(&quot;fe34d0c6-5377-4ab7-bd4b-a0b94ce44276&quot;);</span>
+
+<span class="fc" id="L63">        assertTrue(result);</span>
+<span class="fc" id="L64">        assertNotNull(leave.getValidatedAt());</span>
+<span class="fc" id="L65">        verify(genericDAO, times(1)).update(leave);</span>
+<span class="fc" id="L66">        verify(leaveEvent, times(1)).fire(any(LeaveEvent.class));</span>
+<span class="fc" id="L67">    }</span>
+
+    @Test
+    void testValidate_InvalidLeave_ShouldNotUpdateOrFireEvent() {
+<span class="fc" id="L71">        Leave leave = createLeave(15, 10);</span>
+<span class="fc" id="L72">        leave.setId(UUID.fromString(&quot;fe34d0c6-5377-4ab7-bd4b-a0b94ce44276&quot;));</span>
+<span class="fc" id="L73">        when(genericDAO.find(UUID.fromString(&quot;fe34d0c6-5377-4ab7-bd4b-a0b94ce44276&quot;))).thenReturn(Optional.of(leave));</span>
+
+<span class="fc" id="L75">        boolean result = leaveService.validate(&quot;fe34d0c6-5377-4ab7-bd4b-a0b94ce44276&quot;);</span>
+
+<span class="fc" id="L77">        assertFalse(result);</span>
+<span class="fc" id="L78">        verify(genericDAO, never()).update(leave);</span>
+<span class="fc" id="L79">        verify(leaveEvent, never()).fire(any(LeaveEvent.class));</span>
+<span class="fc" id="L80">    }</span>
+
+    @Test
+    void testValidate_LeaveNotFound_ShouldReturnFalse() {
+<span class="fc" id="L84">        when(genericDAO.find(UUID.fromString(&quot;fe34d0c6-5377-4ab7-bd4b-a0b94ce44276&quot;))).thenReturn(Optional.empty());</span>
+
+<span class="fc" id="L86">        boolean result = leaveService.validate(&quot;fe34d0c6-5377-4ab7-bd4b-a0b94ce44276&quot;);</span>
+
+<span class="fc" id="L88">        assertFalse(result);</span>
+<span class="fc" id="L89">        verify(genericDAO, never()).update(any(Leave.class));</span>
+<span class="fc" id="L90">        verify(leaveEvent, never()).fire(any(LeaveEvent.class));</span>
+<span class="fc" id="L91">    }</span>
+
+
+    private Leave createLeave(long leaveDays, int userLeaveBalance) {
+<span class="fc" id="L95">        Leave leave = new Leave();</span>
+<span class="fc" id="L96">        leave.setStartDate(LocalDate.now().minusDays(leaveDays));</span>
+<span class="fc" id="L97">        leave.setEndDate(LocalDate.now());</span>
+
+<span class="fc" id="L99">        Employee employee = new Employee();</span>
+<span class="fc" id="L100">        employee.setLeaveBalance(userLeaveBalance);</span>
+<span class="fc" id="L101">        leave.setUser(employee);</span>
+
+<span class="fc" id="L103">        return leave;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

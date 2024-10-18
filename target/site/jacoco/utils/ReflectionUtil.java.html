@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReflectionUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">J-B6-EmpMan-V3</a> &gt; <a href="index.source.html" class="el_package">utils</a> &gt; <span class="el_source">ReflectionUtil.java</span></div><h1>ReflectionUtil.java</h1><pre class="source lang-java linenums">package utils;
+
+import models.User;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+<span class="nc" id="L11">public class ReflectionUtil {</span>
+
+    public List&lt;Field&gt; getAllDeclaredFields(Class&lt;?&gt; clazz) {
+<span class="nc" id="L14">        List&lt;Field&gt; fields = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L15" title="All 2 branches missed.">        while (clazz != null) {</span>
+<span class="nc bnc" id="L16" title="All 2 branches missed.">            for (Field field : clazz.getDeclaredFields()) {</span>
+<span class="nc" id="L17">                fields.add(field);</span>
+            }
+<span class="nc" id="L19">            clazz = clazz.getSuperclass();</span>
+        }
+<span class="nc" id="L21">        return fields;</span>
+    }
+
+    public Map&lt;String, Object&gt; trackModifiedAttributes(Object existingObject, Object updatedObject) {
+<span class="nc" id="L25">        Map&lt;String, Object&gt; modifiedAttributes = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L27">        List&lt;Field&gt; fields = getAllDeclaredFields(User.class);</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        for (Field field : fields) {</span>
+<span class="nc" id="L29">            field.setAccessible(true);</span>
+            try {
+<span class="nc" id="L31">                Object oldValue = field.get(existingObject);</span>
+<span class="nc" id="L32">                Object newValue = field.get(updatedObject);</span>
+
+<span class="nc bnc" id="L34" title="All 8 branches missed.">                if ((oldValue != null &amp;&amp; !oldValue.equals(newValue)) || (oldValue == null &amp;&amp; newValue != null)) {</span>
+<span class="nc" id="L35">                    modifiedAttributes.put(field.getName(), oldValue);</span>
+                }
+
+<span class="nc" id="L38">            } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L39">                System.out.println(&quot;Failed to access field: &quot; + field.getName() + &quot; due to: &quot; + e.getMessage());</span>
+<span class="nc" id="L40">            }</span>
+<span class="nc" id="L41">        }</span>
+
+<span class="nc" id="L43">        return modifiedAttributes;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

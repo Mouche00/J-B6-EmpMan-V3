@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationServiceImplTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">services.implementations</a> &gt; <span class="el_source">ApplicationServiceImplTest.java</span></div><h1>ApplicationServiceImplTest.java</h1><pre class="source lang-java linenums">package services.implementations;
+
+import daos.interfaces.ApplicationDAO;
+import daos.interfaces.GenericDAO;
+import models.Application;
+import models.BaseUser;
+import models.JobOffer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
+<span class="fc" id="L22">public class ApplicationServiceImplTest {</span>
+
+    @Mock
+    private ApplicationDAO applicationDAO;
+
+    @Mock
+    private GenericDAO&lt;Application, String&gt; genericDAO;
+
+    @InjectMocks
+    private ApplicationServiceImpl applicationService;
+
+    private BaseUser user;
+    private JobOffer jobOffer;
+    private Application application;
+
+    @BeforeEach
+    void setUp() {
+
+<span class="fc" id="L40">        user = new BaseUser();</span>
+<span class="fc" id="L41">        user.setId(UUID.randomUUID());</span>
+
+<span class="fc" id="L43">        jobOffer = new JobOffer();</span>
+<span class="fc" id="L44">        jobOffer.setId(UUID.randomUUID());</span>
+
+<span class="fc" id="L46">        application = new Application();</span>
+<span class="fc" id="L47">        application.setApplicant(user);</span>
+<span class="fc" id="L48">        application.setJobOffer(jobOffer);</span>
+<span class="fc" id="L49">    }</span>
+
+    @Test
+    void testSave_applicationExists_shouldReturnTrue() {
+        // Arrange
+<span class="fc" id="L54">        when(applicationDAO.findByForeignKeys(user.getId(), jobOffer.getId())).thenReturn(Optional.of(application));</span>
+<span class="fc" id="L55">        when(genericDAO.save(application)).thenReturn(true);</span>
+
+        // Act
+<span class="fc" id="L58">        boolean result = applicationService.save(application);</span>
+
+        // Assert
+<span class="fc" id="L61">        assertTrue(result); // Expect the application to be saved successfully</span>
+<span class="fc" id="L62">        verify(applicationDAO, times(1)).findByForeignKeys(user.getId(), jobOffer.getId());</span>
+<span class="fc" id="L63">        verify(genericDAO, times(1)).save(application);</span>
+<span class="fc" id="L64">    }</span>
+
+    @Test
+    void testSave_applicationDoesNotExist_shouldReturnFalse() {
+        // Arrange
+<span class="fc" id="L69">        when(applicationDAO.findByForeignKeys(user.getId(), jobOffer.getId())).thenReturn(Optional.empty());</span>
+
+        // Act
+<span class="fc" id="L72">        boolean result = applicationService.save(application);</span>
+
+        // Assert
+<span class="fc" id="L75">        assertFalse(result); // Expect save to fail since the application does not exist</span>
+<span class="fc" id="L76">        verify(applicationDAO, times(1)).findByForeignKeys(user.getId(), jobOffer.getId());</span>
+<span class="fc" id="L77">        verify(genericDAO, never()).save(application); // Save should not be called if application doesn't exist</span>
+<span class="fc" id="L78">    }</span>
+
+    @Test
+    void testCheckIfExists_applicationExists_shouldReturnTrue() {
+        // Arrange
+<span class="fc" id="L83">        when(applicationDAO.findByForeignKeys(user.getId(), jobOffer.getId())).thenReturn(Optional.of(application));</span>
+
+        // Act
+<span class="fc" id="L86">        boolean result = applicationService.checkIfExists(user, jobOffer);</span>
+
+        // Assert
+<span class="fc" id="L89">        assertTrue(result); // The application exists</span>
+<span class="fc" id="L90">        verify(applicationDAO, times(1)).findByForeignKeys(user.getId(), jobOffer.getId());</span>
+<span class="fc" id="L91">    }</span>
+
+    @Test
+    void testCheckIfExists_applicationDoesNotExist_shouldReturnFalse() {
+        // Arrange
+<span class="fc" id="L96">        when(applicationDAO.findByForeignKeys(user.getId(), jobOffer.getId())).thenReturn(Optional.empty());</span>
+
+        // Act
+<span class="fc" id="L99">        boolean result = applicationService.checkIfExists(user, jobOffer);</span>
+
+        // Assert
+<span class="fc" id="L102">        assertFalse(result); // The application does not exist</span>
+<span class="fc" id="L103">        verify(applicationDAO, times(1)).findByForeignKeys(user.getId(), jobOffer.getId());</span>
+<span class="fc" id="L104">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

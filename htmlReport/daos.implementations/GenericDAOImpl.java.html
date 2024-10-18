@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GenericDAOImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java in J-B4-UseMan Coverage Results</a> &gt; <a href="index.source.html" class="el_package">daos.implementations</a> &gt; <span class="el_source">GenericDAOImpl.java</span></div><h1>GenericDAOImpl.java</h1><pre class="source lang-java linenums">package daos.implementations;
+
+import daos.interfaces.GenericDAO;
+import exceptions.DAOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.JPAUtil;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import java.util.List;
+import java.util.Optional;
+
+
+public abstract class GenericDAOImpl&lt;T, ID&gt; implements GenericDAO&lt;T, ID&gt; {
+
+<span class="nc" id="L17">    private static final Logger logger = LoggerFactory.getLogger(GenericDAOImpl.class);</span>
+    protected Class&lt;T&gt; entityClass;
+
+<span class="nc" id="L20">    protected GenericDAOImpl (Class&lt;T&gt; entityClass) {</span>
+<span class="nc" id="L21">        this.entityClass = entityClass;</span>
+<span class="nc" id="L22">    }</span>
+
+    public boolean merge(T entity) {
+<span class="nc" id="L25">        return executeInTransaction(entityManager -&gt; {</span>
+<span class="nc" id="L26">            entityManager.merge(entity);</span>
+<span class="nc" id="L27">            return true;</span>
+        });
+    }
+
+    public boolean save(T entity) {
+<span class="nc" id="L32">        return merge(entity);</span>
+    }
+
+    public boolean update(T entity) {
+<span class="nc" id="L36">        return merge(entity);</span>
+    }
+
+    public boolean delete(T entity) {
+<span class="nc" id="L40">        return executeInTransaction(entityManager -&gt; {</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">            entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));</span>
+<span class="nc" id="L42">            return true;</span>
+        });
+    }
+
+    public Optional&lt;T&gt; find(ID id) {
+<span class="nc" id="L47">        return execute(entityManager -&gt; Optional.ofNullable(entityManager.find(entityClass, id)));</span>
+    }
+
+    public List&lt;T&gt; getAll() {
+<span class="nc" id="L51">        return executeInTransaction(entityManager -&gt;</span>
+<span class="nc" id="L52">                entityManager.createQuery(&quot;SELECT e FROM &quot; + entityClass.getSimpleName() + &quot; e&quot;, entityClass).getResultList());</span>
+    }
+
+    protected &lt;R&gt; R executeInTransaction(EntityManagerFunction&lt;R&gt; function) {
+<span class="nc" id="L56">        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();</span>
+<span class="nc" id="L57">        EntityTransaction transaction = entityManager.getTransaction();</span>
+
+        try {
+<span class="nc" id="L60">            transaction.begin();</span>
+<span class="nc" id="L61">            R result = function.apply(entityManager);</span>
+<span class="nc" id="L62">            transaction.commit();</span>
+<span class="nc" id="L63">            return result;</span>
+<span class="nc" id="L64">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            if (transaction.isActive()) {</span>
+<span class="nc" id="L66">                transaction.rollback();</span>
+            }
+
+<span class="nc" id="L69">            logger.error(&quot;Transaction failed&quot;, e);</span>
+<span class="nc" id="L70">            throw new DAOException(e);</span>
+        } finally {
+<span class="nc" id="L72">            entityManager.close();</span>
+        }
+    }
+
+    protected &lt;R&gt; R execute(EntityManagerFunction&lt;R&gt; function) {
+<span class="nc" id="L77">        EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();</span>
+
+        try {
+<span class="nc" id="L80">            return function.apply(entityManager);</span>
+<span class="nc" id="L81">        } catch (Exception e) {</span>
+<span class="nc" id="L82">            logger.error(&quot;Operation failed&quot;, e);</span>
+        }
+<span class="nc" id="L84">        return null;</span>
+    }
+
+    @FunctionalInterface
+    protected interface EntityManagerFunction&lt;R&gt; {
+        R apply(EntityManager entityManager);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

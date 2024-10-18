@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ModHistoryImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">J-B6-EmpMan-V3</a> &gt; <a href="index.source.html" class="el_package">daos.implementations</a> &gt; <span class="el_source">ModHistoryImpl.java</span></div><h1>ModHistoryImpl.java</h1><pre class="source lang-java linenums">package daos.implementations;
+
+import daos.interfaces.GenericDAO;
+import daos.interfaces.ModHistoryDAO;
+import models.ModHistory;
+import models.SalaryHistory;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
+import javax.persistence.TypedQuery;
+import java.util.List;
+import java.util.UUID;
+
+
+@RequestScoped
+@Named(&quot;modDAO&quot;)
+public class ModHistoryImpl extends GenericDAOImpl&lt;ModHistory, UUID&gt; implements ModHistoryDAO {
+    public ModHistoryImpl() {
+<span class="nc" id="L19">        super(ModHistory.class);</span>
+<span class="nc" id="L20">    }</span>
+
+    @Override
+    public List&lt;ModHistory&gt; findByUserId(UUID userId) {
+<span class="nc" id="L24">        String jpql = &quot;SELECT s FROM ModHistory s WHERE s.user.id = :id&quot;;</span>
+<span class="nc" id="L25">        return execute(entityManager -&gt; {</span>
+<span class="nc" id="L26">            TypedQuery&lt;ModHistory&gt; query = entityManager.createQuery(jpql, entityClass);</span>
+<span class="nc" id="L27">            query.setParameter(&quot;id&quot;, userId);</span>
+<span class="nc" id="L28">            return query.getResultList();</span>
+        });
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
