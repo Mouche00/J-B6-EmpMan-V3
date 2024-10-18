@@ -137,7 +137,7 @@ class UserServiceImplTest {
 
         Map<LocalDate, Double> salaryHistory = userService.getSalaryHistory(mockUser.getId().toString());
 
-        assertEquals(2, salaryHistory.size()); // 1 historical + current date
+        assertEquals(2, salaryHistory.size());
         assertTrue(salaryHistory.containsKey(LocalDate.of(2022, 10, 18)));
         assertTrue(salaryHistory.containsKey(LocalDate.now()));
 

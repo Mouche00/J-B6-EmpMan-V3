@@ -18,15 +18,15 @@ public class JSONUtil {
         }
     }
 
-    public List<Map<String, Object>> mergeJsonStringListToMap(List<String> jsonStrings) {
-        List<Map<String, Object>> mapList = jsonStrings.stream()
-                .map(this::convertJsonToMap)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-
-        return mapList;
-    }
+//    public List<Map<String, Object>> mergeJsonStringListToMap(List<String> jsonStrings) {
+//        List<Map<String, Object>> mapList = jsonStrings.stream()
+//                .map(this::convertJsonToMap)
+//                .filter(Optional::isPresent)
+//                .map(Optional::get)
+//                .collect(Collectors.toList());
+//
+//        return mapList;
+//    }
 
     public Optional<Map<String, Object>> convertJsonToMap(String jsonString) {
         try {
@@ -37,12 +37,12 @@ public class JSONUtil {
         }
     }
 
-    public Map<String, Object> mergeMaps(List<Map<String, Object>> maps) {
-        return maps.stream()
-                .flatMap(map -> map.entrySet().stream())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue
-                ));
-    }
+//    public Map<String, Object> mergeMaps(List<Map<String, Object>> maps) {
+//        return maps.stream()
+//                .flatMap(map -> map.entrySet().stream())
+//                .collect(Collectors.toMap(
+//                        Map.Entry::getKey,
+//                        Map.Entry::getValue
+//                ));
+//    }
 }
