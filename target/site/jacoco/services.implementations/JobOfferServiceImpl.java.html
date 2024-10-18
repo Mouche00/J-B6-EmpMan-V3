@@ -7,19 +7,19 @@ import services.interfaces.JobOfferService;
 import java.time.LocalDate;
 import java.util.List;
 
-<span class="nc" id="L10">public class JobOfferServiceImpl extends GenericServiceImpl&lt;JobOffer, String&gt; implements JobOfferService {</span>
+<span class="fc" id="L10">public class JobOfferServiceImpl extends GenericServiceImpl&lt;JobOffer, String&gt; implements JobOfferService {</span>
     @Override
     public void checkDeadlines() {
-<span class="nc" id="L13">        List&lt;JobOffer&gt; jobOffers = genericDAO.getAll();</span>
+<span class="fc" id="L13">        List&lt;JobOffer&gt; jobOffers = genericDAO.getAll();</span>
 
-<span class="nc" id="L15">        jobOffers.stream()</span>
-<span class="nc bnc" id="L16" title="All 2 branches missed.">                .filter(jobOffer -&gt; jobOffer.getDeadline().isBefore(LocalDate.now()) &amp;&amp;</span>
-<span class="nc bnc" id="L17" title="All 2 branches missed.">                        jobOffer.getStatus().equals(JobOfferStatus.OPEN))</span>
-<span class="nc" id="L18">                .forEach(jobOffer -&gt; {</span>
-<span class="nc" id="L19">                    jobOffer.setStatus(JobOfferStatus.EXPIRED);</span>
-<span class="nc" id="L20">                    genericDAO.update(jobOffer);</span>
-<span class="nc" id="L21">                });</span>
+<span class="fc" id="L15">        jobOffers.stream()</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">                .filter(jobOffer -&gt; jobOffer.getDeadline().isBefore(LocalDate.now()) &amp;&amp;</span>
+<span class="fc bfc" id="L17" title="All 2 branches covered.">                        jobOffer.getStatus().equals(JobOfferStatus.OPEN))</span>
+<span class="fc" id="L18">                .forEach(jobOffer -&gt; {</span>
+<span class="fc" id="L19">                    jobOffer.setStatus(JobOfferStatus.EXPIRED);</span>
+<span class="fc" id="L20">                    genericDAO.update(jobOffer);</span>
+<span class="fc" id="L21">                });</span>
 
-<span class="nc" id="L23">    }</span>
+<span class="fc" id="L23">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
